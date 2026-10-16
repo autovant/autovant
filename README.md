@@ -1,8 +1,12 @@
-# Samad S.
+# Samad Shareef
 
-## Lead Applied AI & Automation Engineer
+## Applied AI Engineer and AI & Automation Architect
 
 I build governed agent systems, local-first AI products, and enterprise automation that can survive contact with real operations. My work tends to sit where model behavior, deterministic software, human judgment, and delivery constraints meet.
+
+Enterprise automation since 2018 · 300+ end-to-end automation solutions built · $500K+ in delivered savings and avoided cost · Python, FastAPI, LangGraph, MCP, RAG, and evaluation-driven AI with deterministic controls and human approval
+
+[LinkedIn](https://www.linkedin.com/in/samadshareef)
 
 Most of my product source is private by design. The case studies below explain the architecture, decisions, evidence, and limitations without exposing private code, client data, credentials, or internal environments.
 
@@ -41,5 +45,5 @@ Most of my product source is private by design. The case studies below explain t
 
 ## Professional contact
 
-For senior or lead applied AI and automation opportunities, [open a professional inquiry](https://github.com/autovant/autovant/issues/new?title=Professional%20inquiry). Please keep confidential details out of the public issue; we can move the conversation to an appropriate channel.
+For senior, principal, and lead opportunities in applied AI engineering and solutions architecture, the quickest route is [LinkedIn](https://www.linkedin.com/in/samadshareef). You can also [open a professional inquiry](https://github.com/autovant/autovant/issues/new?title=Professional%20inquiry); please keep confidential details out of the public issue.
 
