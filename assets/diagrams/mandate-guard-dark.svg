@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1144" height="332" viewBox="0 0 1144 332" role="img" aria-labelledby="t"><title id="t">Mandate Guard: the model interprets the clause, deterministic code decides</title>
+<rect width="1144" height="332" rx="14" fill="#111B2E"/>
+<text x="32" y="40" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#A9B4C7">Mandate Guard: the model interprets the clause, deterministic code decides</text>
+<rect x="476" y="50" width="420" height="206" rx="12" fill="none" stroke="#2A3A57" stroke-width="1.5" stroke-dasharray="5 5"/>
+<text x="488" y="64" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11" letter-spacing=".4" fill="#7C89A1">DECISION FUNCTION: NO MODEL INSIDE</text>
+<path d="M200 105.0H260" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="253,100.5 260,105.0 253,109.5" fill="#52617D"/>
+<path d="M428 105.0H488" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="481,100.5 488,105.0 481,109.5" fill="#52617D"/>
+<path d="M656 105.0H716" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="709,100.5 716,105.0 709,109.5" fill="#52617D"/>
+<path d="M656 211.0H678.0Q686.0 211.0 686.0 203.0V113.0Q686.0 105.0 694.0 105.0H716" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="709,100.5 716,105.0 709,109.5" fill="#52617D"/>
+<path d="M884 105.0H944" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="937,100.5 944,105.0 937,109.5" fill="#52617D"/>
+<path d="M884 105.0H906.0Q914.0 105.0 914.0 113.0V203.0Q914.0 211.0 922.0 211.0H944" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="937,206.5 944,211.0 937,215.5" fill="#52617D"/>
+<rect x="32" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#CBD5E1" stroke-opacity=".55"/>
+<rect x="32" y="84" width="3" height="42" rx="1.5" fill="#CBD5E1"/>
+<text x="46" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Restriction clause</text>
+<text x="46" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">natural language</text>
+<rect x="260" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#818CF8" stroke-opacity=".55"/>
+<rect x="260" y="84" width="3" height="42" rx="1.5" fill="#818CF8"/>
+<text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Tiered parser</text>
+<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">LLM proposes a predicate</text>
+<rect x="488" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="488" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="502" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Structured predicate</text>
+<text x="502" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">grounding + roundtrip</text>
+<rect x="488" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#CBD5E1" stroke-opacity=".55"/>
+<rect x="488" y="190" width="3" height="42" rx="1.5" fill="#CBD5E1"/>
+<text x="502" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Complete holdings</text>
+<text x="502" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">no sampling, no subset</text>
+<rect x="716" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="716" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="730" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Pure evaluator</text>
+<text x="730" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">aggregate + threshold</text>
+<rect x="944" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#FBBF24" stroke-opacity=".55"/>
+<rect x="944" y="84" width="3" height="42" rx="1.5" fill="#FBBF24"/>
+<text x="958" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Source-linked review</text>
+<text x="958" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">reviewer is accountable</text>
+<rect x="944" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#94A3B8" stroke-opacity=".55"/>
+<rect x="944" y="190" width="3" height="42" rx="1.5" fill="#94A3B8"/>
+<text x="958" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Hash-chained audit</text>
+<text x="958" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">JSON / HTML export</text>
+<rect x="32" y="297" width="10" height="10" rx="2" fill="#818CF8"/>
+<text x="48" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Model interprets</text>
+<rect x="167.6" y="297" width="10" height="10" rx="2" fill="#2DD4BF"/>
+<text x="183.6" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Deterministic code</text>
+<rect x="316.4" y="297" width="10" height="10" rx="2" fill="#FBBF24"/>
+<text x="332.4" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Human decision</text>
+<rect x="438.79999999999995" y="297" width="10" height="10" rx="2" fill="#94A3B8"/>
+<text x="454.79999999999995" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">State / evidence</text>
+<rect x="574.4" y="297" width="10" height="10" rx="2" fill="#CBD5E1"/>
+<text x="590.4" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Input / output</text>
+</svg>
