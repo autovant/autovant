@@ -10,7 +10,7 @@ I turn document, agent and operational workflows into software with explicit con
 **Career impact since 2018:** **$1.5M+** saved · **20,000+** hours saved · **300+** end-to-end automation solutions · **8 years** in enterprise automation
 
 Open to senior, principal and lead roles in applied AI engineering and solutions architecture.
-**[Portfolio and résumé](https://samadshareef.vercel.app)** · **[LinkedIn](https://www.linkedin.com/in/samadshareef)**
+**[Portfolio and résumé](https://samadshareef.vercel.app)** · **[LinkedIn](https://www.linkedin.com/in/samadshareef)** · **[Public code: Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)**
 
 ## Selected systems
 
