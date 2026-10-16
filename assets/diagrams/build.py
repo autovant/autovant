@@ -192,7 +192,7 @@ def hero(name, t):
     k, w, h = t["kinds"], 1280, 300
     mono = "ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace"
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" '
-         'aria-labelledby="t"><title id="t">Samad Shareef: Applied AI Engineer and Automation Architect. '
+         'aria-labelledby="t"><title id="t">Samad Shareef: Applied AI Engineer, AI and Automation Architect. '
          'Models interpret, policy decides, humans approve, actions are audited.</title>',
          f'<defs><pattern id="g" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" '
          f'fill="none" stroke="{t["box"]}" stroke-opacity=".35"/></pattern></defs>',

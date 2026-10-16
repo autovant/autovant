@@ -21,7 +21,11 @@ Enterprise automation teams do more than build bots. They interpret requirements
 
 ## The tools
 
-⟦TOOLS⟧
+| Tool | What it does |
+|---|---|
+| **Blue Prism Workbench** | Deterministic review of Blue Prism processes and objects, artifact generation, release building, plain-language explanation and test-case export. All XML parsing, generation, validation, layout and packaging go through one engine client. |
+| **Scribe** | A no-admin OCR utility. One OCR engine sits behind both a headless JSON CLI and a desktop app, with deterministic page processing and a stable output contract. |
+| **OpenVantage** | A CPU-first document pipeline: OCR, classification, schema-bound extraction, tables and calibrated confidence, with a revision-aware human review station. Each stage can swap in a heavier model without reshaping the pipeline. |
 
 ## Key decisions
 
