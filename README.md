@@ -1,49 +1,38 @@
-# Samad Shareef
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
+  <img alt="Samad Shareef: Applied AI Engineer and Automation Architect. Models interpret, policy decides, humans approve, actions are audited." src="assets/hero-light.svg" width="100%">
+</picture>
 
-## Applied AI Engineer and AI & Automation Architect
+### Applied AI Engineer · AI & Automation Architect
 
-I build governed agent systems, local-first AI products, and enterprise automation that can survive contact with real operations. My work tends to sit where model behavior, deterministic software, human judgment, and delivery constraints meet.
+I turn document, agent and operational workflows into software with explicit controls, review paths and measurable verification. Models interpret and propose. Deterministic code and accountable people own the consequential decisions.
 
-Enterprise automation since 2018 · 300+ end-to-end automation solutions built · $500K+ in delivered savings and avoided cost · Python, FastAPI, LangGraph, MCP, RAG, and evaluation-driven AI with deterministic controls and human approval
+**8 years** in enterprise automation · **300+** end-to-end automation solutions · **$1.5M+** saved · **20,000+** hours saved
+<sub>Career totals since 2018.</sub>
 
-[LinkedIn](https://www.linkedin.com/in/samadshareef)
+Open to senior, principal and lead roles in applied AI engineering and solutions architecture: **[LinkedIn](https://www.linkedin.com/in/samadshareef)**
 
-Most of my product source is private by design. The case studies below explain the architecture, decisions, evidence, and limitations without exposing private code, client data, credentials, or internal environments.
+## Selected systems
 
-## Selected work
+Personal projects, built outside client and employer environments. The source is private. Each case study shows the product running on synthetic data, its architecture, its evidence and its limits.
 
-| Case study | Engineering focus |
-|---|---|
-| [Redactor](case-studies/redactor.md) | Hard-offline de-identification, fail-closed file handling, encrypted restoration, and portable Windows delivery |
-| [Mandate Guard](case-studies/mandate-guard.md) | Governed document analysis where models interpret restrictions and deterministic policy code decides |
-| [Conductor](case-studies/conductor.md) | Configuration-first case operations, durable workflows, role boundaries, and governed action |
-| [GraphForge](case-studies/graphforge.md) | Visual LangGraph authoring, real execution, checkpoints, human interrupts, and runnable code export |
-| [Relay Desktop](case-studies/relay.md) | Local Windows voice workflows, CPU speech recognition, provider controls, and desktop product engineering |
-| [Enterprise automation systems](case-studies/enterprise-automation.md) | Blue Prism tooling, OCR, confidence-aware document processing, human review, and delivery governance |
+⟦FEATURES⟧
 
-## How I engineer
+## How I build
 
-- Models can interpret and propose. Deterministic code or accountable people own consequential decisions.
-- Uncertainty should route to review. Unsupported or ambiguous inputs should fail clearly instead of producing plausible output.
-- Local proof, hosted checks, connected-system proof, and human acceptance are different evidence classes.
-- Privacy and authority boundaries belong in the architecture, not in a disclaimer added after implementation.
-- A release should be reproducible, reviewable, and honest about what was not tested.
+- **Models propose, code and people decide.** Language models interpret and draft. Deterministic code and accountable reviewers own anything consequential.
+- **Uncertainty routes to review.** Ambiguous or unsupported input fails clearly instead of producing plausible output.
+- **Evidence has classes.** Local proof, hosted checks, connected-system proof and human acceptance are different claims, and I label which one I have.
+- **Privacy is architecture.** Egress, authority and data boundaries are designed in, not disclaimed afterwards.
 
-## Capabilities
+## Core stack
 
-| Area | Working stack and patterns |
-|---|---|
-| Applied AI | Agent orchestration, retrieval, document intelligence, OCR, model grounding, provider adapters, MCP, evaluation |
-| Platforms | Python, FastAPI, PostgreSQL, LangGraph, Docker, typed configuration, durable workers, audit trails |
-| Product engineering | React, TypeScript, Rust, Tauri, C#/.NET, PowerShell, Windows packaging, responsive and accessible UI |
-| Enterprise automation | Blue Prism, RPA delivery, artifact validation, document review, human-in-the-loop operations, ITSM integration patterns |
-| Quality and assurance | Pytest, Vitest, Playwright, Ruff, mypy, Clippy, adversarial review, evidence ledgers, reproducible release verification |
+**Applied AI:** Python, FastAPI, LangGraph, MCP, RAG and hybrid retrieval, evaluation harnesses, guardrails, human-in-the-loop
+**Platforms:** PostgreSQL / pgvector, Docker, durable workers, AWS Bedrock AgentCore, Azure OpenAI, audit trails
+**Product:** React, TypeScript, Rust, Tauri, C# / .NET, PowerShell, Windows packaging
+**Enterprise automation:** Blue Prism, UiPath, Power Automate, Microsoft Graph / SharePoint, ServiceNow, Jira
+**Quality:** Pytest, Vitest, Playwright, Ruff, mypy, Clippy, adversarial review, reproducible release checks
 
-## Public engineering sample
+## Public code
 
-[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers) packages structured brainstorming, planning, test-driven development, debugging, verification, and code-review workflows. It is an MIT-licensed adaptation of Jesse Vincent's `obra/superpowers` project, with the upstream credit preserved in the repository.
-
-## Professional contact
-
-For senior, principal, and lead opportunities in applied AI engineering and solutions architecture, the quickest route is [LinkedIn](https://www.linkedin.com/in/samadshareef). You can also [open a professional inquiry](https://github.com/autovant/autovant/issues/new?title=Professional%20inquiry); please keep confidential details out of the public issue.
-
+**[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)** brings structured brainstorming, planning, test-driven development, debugging, verification and code-review workflows to GitHub Copilot. ⟦SUPERPOWERS⟧ It's an MIT-licensed adaptation of Jesse Vincent's [obra/superpowers](https://github.com/obra/superpowers), with the upstream credit kept in the repository.

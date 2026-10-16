@@ -1,61 +1,42 @@
-# Enterprise Automation Systems: Review, Document Intelligence, and Delivery
+# Enterprise automation tooling
 
-## Problem and users
+**Tools for the engineering work around RPA delivery: artifact review, release building, OCR, and document extraction with human review.**
 
-Enterprise automation teams do more than build bots. They interpret requirements, review platform artifacts, generate tests, package releases, process documents, route uncertainty to people, integrate with existing work systems, and prove that the result is supportable on locked-down machines.
+⟦HERO⟧
 
-This case study combines recurring engineering patterns across several private tools. It does not claim that they are one deployed customer platform.
+| Project | My role | Stack | Evidence |
+|---|---|---|---|
+| Three related private tools, shown here with synthetic data only. Not one deployed customer platform. | Sole designer and engineer | Python · FastAPI · React · TypeScript · Blue Prism XML · OCR | ⟦EVIDENCE-STRIP⟧ |
 
-## Constraints and risk boundary
+## The problem
 
-- Platform artifacts must be parsed and validated by a canonical engine rather than duplicated ad hoc.
-- Unsupported files must be refused with a clear reason.
-- Document extraction confidence must route uncertainty to a human instead of silently accepting it.
-- Optional AI providers must remain swappable and visibly unconfigured when unavailable.
-- Windows utilities must work without assuming admin rights or fragile native dependencies.
-- Client data, credentials, employer configuration, and deployment claims stay private.
+Enterprise automation teams do more than build bots. They interpret requirements, review platform artifacts, package releases, process documents, route uncertainty to people, and prove the result can be supported on locked-down machines. These tools turn recurring parts of that work into explicit, testable contracts.
 
-## Architecture and key decisions
+## Architecture
 
-```mermaid
-flowchart LR
-    A[Requirements or artifacts] --> B{Input contract}
-    B -->|Automation XML| C[Canonical platform engine]
-    B -->|Scanned documents| D[OCR and layout pipeline]
-    C --> E[Review, generation, build, tests]
-    D --> F[Classification and extraction]
-    F --> G{Confidence and validation}
-    G -->|High confidence| H[Structured result]
-    G -->|Uncertain| I[Human review station]
-    E --> J[Validated delivery artifact]
-    I --> H
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/enterprise-automation-dark.svg">
+  <img alt="Two pipelines. Requirements or automation XML go through a canonical engine that parses, validates and generates artifacts, then through review, build and tests to a validated, importable release. Scanned documents go through CPU-first OCR and layout, then schema-bound classification and extraction, then a calibrated confidence gate. Confident results become a structured JSON result. Uncertain fields go to a human review station first." src="../assets/diagrams/enterprise-automation-light.svg" width="100%">
+</picture>
 
-The shared pattern is explicit contracts around uncertain or platform-specific work. Blue Prism Workbench routes XML parsing, generation, validation, layout, and release packaging through one engine client. Scribe exposes one OCR engine through both a headless JSON CLI and a desktop GUI. OpenVantage separates OCR, classification, extraction, confidence, and human review so heavier models can change without reshaping the pipeline.
+## The tools
 
-## What I designed and delivered
+⟦TOOLS⟧
 
-- A Blue Prism workbench for deterministic review, artifact generation, release building, explanation, and test-case export.
-- Isolation of Blue Prism XML knowledge behind one engine boundary.
-- Swappable model-provider adapters with visible configuration status.
-- A no-admin OCR utility with one shared engine, deterministic page processing, a stable JSON contract, and desktop delivery.
-- A CPU-first document pipeline with classification, schema extraction, tables, calibration, and a revision-aware human review station.
-- Delivery tooling for project intake, evidence organization, review gates, timeline tracking, and presentation-safe exports.
+## Key decisions
 
-## Verification evidence
+- **One engine per platform format.** All Blue Prism XML knowledge sits behind one engine boundary, so review, generation, validation and packaging can't disagree about what a file means.
+- **Uncertainty routes to a person.** Extraction confidence is calibrated, and fields below threshold go to a review station instead of being accepted silently.
+- **Work on locked-down machines.** The OCR utility needs no admin rights or fragile native dependencies, and heavy model weights are optional.
 
-The current Blue Prism Workbench README and head commit report 154 passing unit tests and no system-library dependency for its PDF fixtures. Its documented capabilities include 31 Blue Prism rules, validated artifact generation, a requirements-driven build workspace, and test exports.
+## Evidence
 
-Scribe and OpenVantage both contain extensive test suites and current architecture documentation. Their checked-in count wording is inconsistent with their current head commit messages, so I intentionally omit exact test totals from the public claim until those repositories are refreshed. The architecture and fail-safe routing claims are directly observable in current source documentation.
+⟦EVIDENCE⟧
 
-## Honest limitations
+## Scope and limits
 
-- This is a portfolio of related tools, not evidence of one customer deployment.
-- OpenVantage explicitly does not claim drop-in accuracy equivalence to a tuned commercial document platform.
-- Heavy OCR, layout, table, and model weights are optional in parts of the toolset.
-- Real Jira, Outlook, SharePoint, identity, or customer-environment acceptance is not claimed here.
+- These are related tools, not evidence of a single customer deployment.
+- OpenVantage doesn't claim accuracy parity with a tuned commercial document platform.
+- No real Jira, Outlook, SharePoint, identity or customer-environment acceptance is claimed here.
 
-## Skills demonstrated
-
-Blue Prism, RPA architecture, Python, FastAPI, React, TypeScript, XML contracts, code generation, OCR, confidence calibration, human review, Windows packaging, provider abstraction, document security, delivery governance, and testable enterprise integration boundaries.
-
+[← Back to profile](../README.md)

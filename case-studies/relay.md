@@ -1,63 +1,53 @@
-# Relay Desktop: Local Windows Voice Workflows
+# Relay Desktop
 
-## Problem and users
+**Local Windows dictation and meeting notes: on-device speech recognition first, cloud cleanup only when allowed.**
 
-Voice tools often trade convenience for privacy, require cloud accounts, or perform poorly on ordinary Windows hardware. Users on locked-down or privacy-sensitive machines need dictation and meeting support that remains useful without a GPU, administrator access, or mandatory cloud processing.
+⟦HERO⟧
 
-I developed Relay Desktop as a Windows-first local voice product with CPU-efficient transcription, a focused desktop experience, and optional cleanup providers behind explicit privacy controls.
+| Project | My role | Stack | Evidence |
+|---|---|---|---|
+| Personal project: a Windows-focused adaptation of the MIT-licensed [Handy](https://github.com/cjpais/Handy) | Designer and engineer of the adaptation | Rust · Tauri · React · local speech recognition | ⟦EVIDENCE-STRIP⟧ |
 
-## Constraints and risk boundary
+## The problem
 
-- Local transcription must remain the flagship path.
-- Offline mode must block cloud providers before socket use while preserving loopback services.
-- Provider failures and refused operations must be visible rather than silently bypassed.
-- Desktop UX must feel native on Windows 10 and Windows 11 and remain keyboard accessible.
-- Packaging must not be described as trusted or signed without a real certificate and external verification.
-- Upstream MIT attribution must remain explicit.
+Voice tools often trade privacy for convenience, require cloud accounts, or perform poorly on ordinary Windows hardware. People on locked-down or privacy-sensitive machines need dictation and meeting support that works without a GPU, administrator access or mandatory cloud processing.
 
-## Architecture and key decisions
+## What's upstream and what's mine
 
-```mermaid
-flowchart LR
-    A[Microphone or approved audio] --> B[Local capture]
-    B --> C[CPU speech recognition]
-    C --> D[Incremental transcript]
-    D --> E{Optional cleanup}
-    E -->|Offline| F[Local or no cleanup]
-    E -->|Authorized| G[Configured provider adapter]
-    F --> H[History and export]
-    G --> H
-    I[Privacy policy] --> E
-```
+Relay Desktop builds on Handy, an MIT-licensed open-source speech-to-text app, and keeps that attribution in the product and repository. ⟦DELTA⟧
 
-The transcription path and cleanup path are separate. Local speech recognition produces usable text without a hosted model. Cleanup providers are optional and evaluated through a network policy that treats loopback and external routes differently.
+## Architecture
 
-The desktop uses Tauri/Rust with a React interface. The Windows redesign establishes shell, typography, focus, responsive, and fallback behavior rather than relying on one theme or one machine configuration.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/relay-dark.svg">
+  <img alt="Relay Desktop architecture: local capture feeds an on-device CPU speech model that produces a live transcript usable with no network. An optional cleanup step runs locally or through an approved provider, and an offline policy gate allows or refuses provider routes before any socket opens. Results go to history and export for meeting workflows." src="../assets/diagrams/relay-light.svg" width="100%">
+</picture>
 
-## What I designed and delivered
+Transcription and cleanup are separate paths. Local speech recognition produces usable text without a hosted model. Cleanup is optional, and a network policy decides each route, treating loopback and external destinations differently.
 
-- Local CPU-oriented speech recognition and segment-incremental transcription.
-- A Windows-first Tauri/Rust and React desktop shell.
+## Key decisions
+
+- **Local transcription is the flagship path.** Everything useful works offline, and cloud cleanup is an optional extra.
+- **Block before the socket.** Offline mode refuses cloud providers and model downloads before a connection opens, while still allowing loopback services. Refusals are visible, never silently bypassed.
+- **Don't claim trust you can't show.** Portable packaging exists, but the build isn't described as signed or trusted until a real certificate and external verification back that up.
+
+## What I built
+
+- Segment-incremental local transcription on CPU.
+- A Windows-first Tauri/Rust and React shell with Windows 10 and 11 design tokens, focus handling and responsive fallbacks.
 - Offline-mode gates for cloud providers and model downloads.
 - Optional local or subscription-backed cleanup adapters with visible status.
-- Meeting-oriented question, agenda, handoff, and transcript-history workflows.
-- Accessibility fixes, Windows shell tokens, screen migrations, and responsive evidence.
+- Meeting workflows for questions, agendas, handoffs and transcript history.
 - Portable packaging with version and stale-artifact safeguards.
 
-## Verification evidence
+## Evidence
 
-A revision-scoped privacy checkpoint recorded lint and build success, 354 passing Rust tests, Clippy success, and nine Playwright UI checks. That checkpoint also recorded the initial formatting failure and the subsequent clean rerun rather than hiding the failure.
+⟦EVIDENCE⟧
 
-The same evidence shows two live cleanup-probe outcomes: a contaminated routing environment was refused, while a scrubbed normal-launch environment completed a real subscription CLI cleanup. This supports the routing-safety claim at that revision; it is not a fresh current-head network audit.
+## Scope and limits
 
-## Honest limitations
+- Authenticode signing, SmartScreen reputation and fresh-VM acceptance are deferred until a signing certificate is available.
+- CPU transcription speed depends on the model, the device and the audio quality.
+- Some cleanup behaviour depends on locally installed or subscription-backed tools.
 
-- Portable packaging exists, but Authenticode, Windows Properties verification, SmartScreen reputation, and fresh-VM acceptance remain deferred until a signing certificate is available.
-- Some provider behavior depends on installed local or subscription-backed tools.
-- CPU transcription performance varies by model, device, and audio quality.
-- The product derives from the MIT-licensed Handy project; the public portfolio must retain that attribution and distinguish adaptation from original upstream work.
-
-## Skills demonstrated
-
-Rust, Tauri, React, Windows desktop engineering, local speech recognition, offline policy enforcement, provider adapters, process isolation, accessibility, responsive UI, test hermeticity, packaging, and evidence-based release boundaries.
-
+[← Back to profile](../README.md)

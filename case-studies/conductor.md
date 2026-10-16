@@ -1,64 +1,48 @@
-# Conductor: Intelligent Case Operations
+# Conductor
 
-## Problem and users
+**Case operations from intake to governed action: assistance advises, deterministic workers act, people decide.**
 
-Operational casework rarely fails because a team lacks one more chatbot. It fails because intake, evidence, work queues, decisions, communications, external actions, permissions, and audit history drift across disconnected tools.
+⟦HERO⟧
 
-I designed Conductor as a configuration-first case-operations platform for operators, reviewers, administrators, and platform teams. The product connects intake to understanding, structured work, assistance, and governed action without treating an AI response as authority.
+| Project | My role | Stack | Evidence |
+|---|---|---|---|
+| Personal project, built outside client environments | Sole designer and engineer | Python · FastAPI · LangGraph · PostgreSQL · React | ⟦EVIDENCE-STRIP⟧ |
 
-## Constraints and risk boundary
+## The problem
 
-- Local defaults must keep external integrations disabled.
-- Production configuration must fail closed when dependencies, identity, storage, or provider values are missing.
-- Long-running work needs durable worker roles and explicit database responsibilities.
-- Assistance and deterministic actions must remain separate execution boundaries.
-- Connected enterprise claims require authorized evidence from real identity, storage, Graph, OCR/LLM, network, and recovery environments.
-- Representative-user acceptance is a human gate, not something an agent walkthrough can satisfy.
+Operational casework rarely fails for lack of another chatbot. It fails because intake, evidence, queues, decisions, communications, external actions, permissions and audit history drift apart across disconnected tools. Conductor is a configuration-first case-operations platform for operators, reviewers, administrators and platform teams. It connects intake to understanding, structured work, assistance and action without treating an AI response as authority.
 
-## Architecture and key decisions
+## Architecture
 
-```mermaid
-flowchart LR
-    A[Intake channels] --> B[Intake worker]
-    B --> C[Case and evidence model]
-    C --> D[Durable workflow worker]
-    D --> E[Operator workbench]
-    E --> F{Governed decision}
-    F -->|Assist| G[Provider-routed assistant]
-    F -->|Act| H[Deterministic action worker]
-    C --> I[Audit and operational history]
-    G --> I
-    H --> I
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/conductor-dark.svg">
+  <img alt="Conductor architecture: intake channels feed an intake worker that normalises items and attaches evidence to a case stored in PostgreSQL. A durable, checkpointed workflow worker routes the case to an operator workbench and records every step in the audit history. From the workbench, the operator can ask a provider-routed advisory assistant, or approve an action that a deterministic, idempotent action worker carries out and logs to the audit history." src="../assets/diagrams/conductor-light.svg" width="100%">
+</picture>
 
-Conductor ships one artifact with separately startable process roles: API, intake worker, durable workflow worker, deterministic action worker, Graph poller, and deployment jobs. This keeps responsibilities explicit while allowing the system to run as a coordinated whole.
+Conductor ships one artifact with separately startable process roles: API, intake worker, durable workflow worker, deterministic action worker, Microsoft Graph poller and deployment jobs. Each role's responsibilities stay explicit, and the system still runs as one coordinated whole.
 
-The checked-in configuration is deliberately local-only. Graph intake and assistant behavior remain unavailable until their routes are configured. The standalone production profile requires real PostgreSQL, checkpoint storage, versioned object storage, OIDC identity, and an approved provider; it rejects template values instead of falling back to unsafe development behavior.
+## Key decisions
 
-## What I designed and delivered
+- **Assistance and action are separate execution paths.** The assistant can explain and draft. Only the deterministic action worker changes external state, only after a person approves, and idempotently, so a retry can't double-act.
+- **Fail closed in production.** The checked-in configuration is local-only and keeps integrations disabled. The production profile requires real PostgreSQL, checkpoint storage, versioned object storage, OIDC identity and an approved provider, and it rejects template values instead of falling back to development behaviour.
+- **Name the evidence class.** Local validation, connected-system certification and representative-user acceptance are separate gates with separate verdicts. A green local run never stands in for a connected one.
 
-- A configuration-first platform boundary spanning intake, cases, queues, review, assistance, and action.
-- Independently startable roles with explicit database and checkpoint responsibilities.
-- Local/test, standalone, and connected-evidence boundaries.
+## What I built
+
+- A configuration-first platform spanning intake, cases, queues, review, assistance and action.
+- Independently startable worker roles with explicit database and checkpoint responsibilities.
 - Fail-closed configuration generation and readiness diagnostics.
 - Operator and administration interfaces with role-aware workflows.
-- A readiness vocabulary that separates local proof, connected certification, and human acceptance.
-- Reproducible showcase and recovery concepts with evidence-bound manifests.
+- Regression tests for business rules, API contracts, agent and tool behaviour, prompt injection, cross-case isolation and failure recovery.
 
-## Verification evidence
+## Evidence
 
-The current default branch directly supports the process-role and fail-closed configuration claims above. The repository also contains a later showcase-readiness record with detailed local gates, simulated-versus-real integration labeling, residual-risk tracking, and separate Level 1, Level 2, and Level 3 verdicts.
+⟦EVIDENCE⟧
 
-The strongest readiness record names a non-default candidate revision. I therefore do not present its large test totals or readiness labels as current-default-branch completion. The portfolio claim is narrower: I designed and implemented a deeply evidenced case-operations architecture with explicit certification boundaries.
+## Scope and limits
 
-## Honest limitations
+- Connected Microsoft Graph, workforce identity, production storage, approved OCR and LLM providers, and enterprise recovery aren't certified. That needs an authorised environment.
+- Local deterministic and simulated provider behaviour isn't customer or production evidence.
+- A representative non-technical user session is a separate human acceptance gate and isn't claimed here.
 
-- Connected Microsoft Graph, workforce identity, production storage, approved OCR/LLM providers, and enterprise recovery remain uncertified without an authorized environment.
-- A representative nontechnical-user session remained a separate human acceptance gate in the candidate record.
-- Local deterministic and simulated provider behavior is not customer or production evidence.
-- The current public-facing case study intentionally excludes private schemas, environment details, and integration configuration.
-
-## Skills demonstrated
-
-Platform architecture, case management, durable workflows, FastAPI, PostgreSQL, LangGraph, React, worker design, identity and permission boundaries, human-in-the-loop operations, configuration systems, observability, release readiness, and evidence-based product governance.
-
+[← Back to profile](../README.md)

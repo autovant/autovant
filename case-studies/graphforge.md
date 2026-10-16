@@ -1,70 +1,48 @@
-# GraphForge: Visual Agent-Graph Engineering
+# GraphForge
 
-## Problem and users
+**Visually author, run, inspect and export stateful LangGraph workflows.**
 
-Agent workflows become difficult to trust when their state, routing, tools, checkpoints, and failure behavior exist only in handwritten code. Visual builders can improve understanding, but many stop at diagrams or mocked execution and cannot produce a portable implementation.
+⟦HERO⟧
 
-I designed GraphForge for engineers and technical operators who want to author stateful agent graphs visually, execute the real runtime, inspect what happened, pause for human decisions, and export runnable Python.
+| Project | My role | Stack | Evidence |
+|---|---|---|---|
+| Personal project, built outside client environments | Sole designer and engineer | Python · LangGraph · FastAPI · React · React Flow · SQLite | ⟦EVIDENCE-STRIP⟧ |
 
-## Constraints and risk boundary
+## The problem
 
-- The canvas must map to a typed, validated graph contract rather than arbitrary visual state.
-- Runtime evidence must come from genuine LangGraph execution, not an animation.
-- Tool and code nodes need containment and explicit governance.
-- Human interrupts and checkpoint replay must be first-class workflow concepts.
-- AI-assisted graph changes must be previewed and validated before application.
-- Evaluation must name partial failures instead of rounding them into a success claim.
+Agent workflows are hard to trust when their state, routing, tools, checkpoints and failure behaviour live only in handwritten code. Visual builders help people understand a graph, but most stop at a diagram or a mocked run and can't produce something you can deploy. GraphForge is for engineers and technical operators who want to draw a stateful agent graph, run the real runtime, pause for human decisions, inspect what happened, and leave with runnable Python.
 
-## Architecture and key decisions
+## Architecture
 
-```mermaid
-flowchart LR
-    A[React Flow canvas] --> B[Typed Blueprint]
-    B --> C[Validation and preview]
-    C --> D[LangGraph StateGraph]
-    D --> E[Streaming execution]
-    E --> F[SQLite checkpoints]
-    E --> G[Governed tools and subprocesses]
-    E --> H[Human interrupt]
-    F --> I[Time travel and replay]
-    B --> J[Standalone Python export]
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/graphforge-dark.svg">
+  <img alt="GraphForge architecture: the visual canvas and the graph assistant both feed a typed Blueprint, which is validated and previewed before it compiles to the LangGraph runtime. The runtime calls governed tools, pauses at human interrupts and writes checkpoints for replay. The same Blueprint exports to standalone Python." src="../assets/diagrams/graphforge-light.svg" width="100%">
+</picture>
 
-The Blueprint is the system boundary. The visual editor, assistant, validator, runtime, and exporter share that contract. This keeps the canvas from becoming an untestable alternate implementation of the workflow.
+The typed Blueprint is the system boundary. The canvas, the assistant, the validator, the runtime and the exporter all read and write that one contract, so the canvas can't drift into an untestable second implementation of the workflow.
 
-Execution compiles to the real LangGraph runtime with streaming, checkpoints, and interrupts. A workflow can pause for review, record an edited decision, resume, replay from an earlier checkpoint, and export outside the product.
+## Key decisions
 
-## What I designed and delivered
+- **Compile to the real runtime, not an animation.** Runs execute LangGraph with streaming state, checkpoints and interrupts, so what you watch on the canvas is the execution itself. The cost: model calls make demos slow, and the walkthroughs say when a wait has been sped up.
+- **The assistant proposes; validation decides.** AI-drafted graph changes appear as a preview and only apply after the Blueprint validates. This takes a little longer than direct edits, but the graph is never left half-valid.
+- **Govern every side effect.** HTTP, MCP, code and tool nodes run behind explicit boundaries and containment, so an adversarial node can't reach past what the graph declares.
 
-- A typed visual authoring surface over React Flow.
-- Real LangGraph execution with streaming state and checkpoint history.
-- Human-in-the-loop interrupts and replay from prior checkpoints.
-- Blueprint validation, deterministic graph drafting, and plan previews.
-- Governed HTTP, MCP, code, and tool-node boundaries.
-- Runnable standalone Python export.
-- Regenerable walkthrough recordings whose captions are tied to asserted states.
-- A receiver-verifiable source archive.
+## What I built
 
-## Verification evidence
+- A typed visual authoring surface over React Flow, with deterministic graph drafting and plan previews.
+- Real LangGraph execution with streaming state, SQLite checkpoint history, human-in-the-loop interrupts and replay from any earlier checkpoint.
+- Governed HTTP, MCP, code and tool nodes.
+- Standalone Python export that runs outside the product.
+- Regenerable walkthrough recordings whose captions are tied to asserted UI states.
 
-A dated live evaluation generated on 2026-08-10 recorded:
+## Evidence
 
-- 100% correctness across the evaluated cases.
-- 100% adversarial containment, compile completeness, and validator faithfulness.
-- 94.4% execution completeness against a 90% threshold.
-- One named failure in a human-interrupt change-approval case, caused by a missing required input.
+⟦EVIDENCE⟧
 
-The run used an authenticated subscription CLI and a real local governed MCP stdio process. API-style cost was intentionally reported as unavailable because the model ran through a subscription CLI. These figures are retained with their date, environment, and failure; they are not generalized beyond that evaluation set.
+## Scope and limits
 
-## Honest limitations
+- Local tool and MCP evidence isn't proof of a production sandbox or a multi-tenant deployment.
+- Runs through a subscription CLI don't report comparable per-call API cost, so cost is reported as unavailable rather than estimated.
+- Exported code still needs normal review, dependency management and deployment controls.
 
-- The dated evaluation contained one execution failure.
-- Model calls were slow enough that walkthroughs disclose when waits are accelerated.
-- Subscription CLI execution does not provide comparable per-call API pricing.
-- Local tool and MCP evidence is not proof of a production sandbox or multi-tenant deployment.
-- Exported code still needs normal engineering review, dependency management, and deployment controls.
-
-## Skills demonstrated
-
-Agent orchestration, LangGraph, typed contracts, React, Python, streaming systems, checkpointing, human-in-the-loop design, MCP, subprocess containment, code generation, adversarial evaluation, developer experience, and reproducible demonstrations.
-
+[← Back to profile](../README.md)
