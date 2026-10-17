@@ -27,8 +27,8 @@
 <text x="46" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">or automation XML</text>
 <rect x="260" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
 <rect x="260" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
-<text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Canonical engine</text>
-<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">parse · validate · generate</text>
+<text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Engine client</text>
+<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">validate · generate · package</text>
 <rect x="488" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
 <rect x="488" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
 <text x="502" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Review, build, tests</text>
@@ -52,7 +52,7 @@
 <rect x="716" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
 <rect x="716" y="190" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
 <text x="730" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Confidence gate</text>
-<text x="730" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">calibrated thresholds</text>
+<text x="730" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">per-document threshold</text>
 <rect x="944" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#CBD5E1" stroke-opacity=".55"/>
 <rect x="944" y="190" width="3" height="42" rx="1.5" fill="#CBD5E1"/>
 <text x="958" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Structured result</text>
@@ -60,7 +60,7 @@
 <rect x="944" y="284" width="168" height="66" rx="10" fill="#0B1220" stroke="#FBBF24" stroke-opacity=".55"/>
 <rect x="944" y="296" width="3" height="42" rx="1.5" fill="#FBBF24"/>
 <text x="958" y="311" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Review station</text>
-<text x="958" y="331" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">uncertain fields</text>
+<text x="958" y="331" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">low-confidence documents</text>
 <rect x="32" y="403" width="10" height="10" rx="2" fill="#818CF8"/>
 <text x="48" y="412" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Model interprets</text>
 <rect x="167.6" y="403" width="10" height="10" rx="2" fill="#2DD4BF"/>

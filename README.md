@@ -14,25 +14,28 @@ Open to senior, principal and lead roles in applied AI engineering and solutions
 
 ## Selected systems
 
-Redactor, Mandate Guard, Conductor, GraphForge and Relay Desktop are personal projects, built outside client and employer environments. The enterprise automation tools are private tools shown with synthetic data only. The source is private, so each case study shows the product running on synthetic data, its architecture, its evidence and its limits.
+The source is private, so each case study shows the product on synthetic data, its architecture, its dated evidence and its limits.
 
 ### [GraphForge](case-studies/graphforge.md)
 
 **Visually author, run, inspect and export stateful LangGraph workflows.**
 
-⟦IMG:graphforge⟧
+<a href="case-studies/graphforge.md"><img alt="GraphForge: a real LangGraph run paused at a human-review gate, with the reviewer editing the dispatch note before resuming." src="assets/screens/graphforge/graphforge-human-interrupt.png" width="100%"></a>
 
 ### [Mandate Guard](case-studies/mandate-guard.md)
 
-**Investment restrictions interpreted by a model, decided by deterministic code, reviewed by a person.**
+**Investment restrictions turned into predicates, decided by deterministic code, reviewed by a person.**
 
-⟦IMG:mandate-guard⟧
+<a href="case-studies/mandate-guard.md"><img alt="Mandate Guard document-review workspace: a synthetic waiver letter beside a memo whose numbered evidence links point to the exact source passages, awaiting reviewer confirmation." src="assets/screens/mandate-guard/interpretation-evidence.png" width="100%"></a>
 
 ### [Redactor](case-studies/redactor.md)
 
 **Hard-offline de-identification: every file is protected or refused, never passed through.**
 
-⟦IMG:redactor⟧
+<a href="case-studies/redactor.md"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/screens/redactor/redactor-review-dark.png">
+  <img alt="Redactor reviewing two synthetic files before protecting them: one ready, one needing review, with detected categories listed and no values shown." src="assets/screens/redactor/redactor-review-light.png" width="100%">
+</picture></a>
 
 ### More case studies
 
@@ -57,4 +60,4 @@ Redactor, Mandate Guard, Conductor, GraphForge and Relay Desktop are personal pr
 
 ## Public code
 
-**[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)** brings structured brainstorming, planning, test-driven development, debugging, verification and code-review workflows to GitHub Copilot. ⟦SUPERPOWERS⟧ It's an MIT-licensed adaptation of Jesse Vincent's [obra/superpowers](https://github.com/obra/superpowers), with the upstream credit kept in the repository.
+**[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)** brings structured brainstorming, planning, test-driven development, debugging, verification and code-review workflows to GitHub Copilot. It ships the 14 upstream skills, four Copilot prompt files, and PowerShell and Bash installers, with a 9-check repository test suite. It's an MIT-licensed adaptation of Jesse Vincent's [obra/superpowers](https://github.com/obra/superpowers), with the upstream credit kept in the repository.

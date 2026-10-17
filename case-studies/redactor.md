@@ -2,11 +2,16 @@
 
 **Hard-offline de-identification: every file is protected or refused, never passed through.**
 
-⟦HERO⟧
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/redactor/redactor-review-dark.png">
+  <img alt="Redactor portable app, Review before protecting: two synthetic files checked, claim-intake.md needing review and policyholders.csv ready. The privacy-safe preview lists detected categories such as payment card, date, email address and person name without showing any values. The evidence ledger shows hard offline, strict policy, safe mode and an authenticated engine." src="../assets/screens/redactor/redactor-review-light.png" width="100%">
+</picture>
 
-| Project | My role | Stack | Evidence |
-|---|---|---|---|
-| Personal project, built outside client environments | Sole designer and engineer | Python · Rust · Tauri · React · portable Windows packaging | ⟦EVIDENCE-STRIP⟧ |
+<sub>The packaged app reviewing two synthetic files before protecting them. The preview shows detected categories, never the values.</sub>
+
+| Stack | Evidence | Checked |
+|---|---|---|
+| Python · Rust · Tauri · React · portable Windows packaging | 417 Python tests · packaged app run end to end | 2026-10-16 |
 
 ## The problem
 
@@ -24,7 +29,7 @@ One authoritative Python engine owns detection, transformation, refusal and evid
 ## Key decisions
 
 - **Transform, recurse or refuse.** Every input gets classified. "Copied because the parser couldn't understand it" is never a success state. Legacy Office binaries, macro-enabled files, encrypted PDFs and unknown binaries are refused with a reason.
-- **Irreversible by default.** Safe mode can't be undone. Roundtrip mode writes a separate, authenticated, encrypted restoration map that never travels with the protected files, and restore rejects missing, malformed, unknown or ambiguous tokens.
+- **Irreversible by default.** Safe mode can't be undone. Roundtrip mode writes a separate, authenticated, encrypted restoration map that never travels with the protected files, and restore rejects malformed, unknown or ambiguous tokens. Tokens an LLM simply left out of its answer are allowed.
 - **All or nothing for folders.** Directory jobs stage their outputs, and one failed item stops the set from being published as complete and safe.
 
 ## What I built
@@ -37,12 +42,15 @@ One authoritative Python engine owns detection, transformation, refusal and evid
 
 ## Evidence
 
-⟦EVIDENCE⟧
+- **Tests (2026-10-16):** 417 Python tests passed (12 skipped), Ruff was clean, and release verification passed on the source tree.
+- **Packaged app:** the portable build was made from source and driven end to end on synthetic files: Safe protect, Roundtrip protect, and restore of an LLM answer (18 mapping entries authenticated, 3 tokens restored, 0 unresolved).
+- **Refusals:** the CLI refuses a legacy `.xls` and a macro-enabled `.docm`, each with a stated reason.
 
 ## Scope and limits
 
 - Detection isn't infallible. OCR evidence so far is English-focused, and handwriting or low-quality scans can still be missed.
 - Safe projection can reduce visual fidelity for some formats.
+- In the desktop app, a `.docm` shows as ready at the check step and is refused only at protect, and a refused file added on its own fails the whole check with a generic message rather than a per-file reason.
 - Redactor is a privacy engineering tool, not a legal determination or a compliance certification.
 
 [← Back to profile](../README.md)

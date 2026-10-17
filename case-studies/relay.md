@@ -2,11 +2,18 @@
 
 **Local Windows dictation and meeting notes: on-device speech recognition first, cloud cleanup only when allowed.**
 
-⟦HERO⟧
+A Windows-focused adaptation of the MIT-licensed [Handy](https://github.com/cjpais/Handy).
 
-| Project | My role | Stack | Evidence |
-|---|---|---|---|
-| Personal project: a Windows-focused adaptation of the MIT-licensed [Handy](https://github.com/cjpais/Handy) | Designer and engineer of the adaptation | Rust · Tauri · React · local speech recognition | ⟦EVIDENCE-STRIP⟧ |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/relay/relay-privacy-dark.png">
+  <img alt="Relay Settings, Privacy tab: offline mode switched on, a complete list of what can touch the network (user-triggered model downloads, opt-in cloud AI providers, no analytics or telemetry), and an enforced webview lockdown." src="../assets/screens/relay/relay-privacy-light.png" width="100%">
+</picture>
+
+<sub>Settings, Privacy: offline mode on by default and the complete list of features that can touch the network. Captured from the app UI with sample data and a test-harness backend; live transcription isn't shown.</sub>
+
+| Stack | Evidence | Checked |
+|---|---|---|
+| Rust · Tauri · React · sherpa-onnx speech recognition | 120 unit and 9 Playwright UI tests | 2026-10-16 |
 
 ## The problem
 
@@ -14,7 +21,13 @@ Voice tools often trade privacy for convenience, require cloud accounts, or perf
 
 ## What's upstream and what's mine
 
-Relay Desktop builds on Handy, an MIT-licensed open-source speech-to-text app, and keeps that attribution in the product and repository. ⟦DELTA⟧
+Relay started as a fork of Handy, an MIT-licensed open-source speech-to-text app, which supplied the Tauri shell, the audio pipeline and the settings foundation. Handy's credit and license are kept in the repository. Relay adds:
+
+- **A CPU-first engine:** sherpa-onnx Parakeet TDT with a segment-incremental pipeline.
+- **Offline mode as an enforced policy:** cloud routes are refused before a socket opens, and loopback stays allowed.
+- **Meetings:** microphone and system-audio capture in one transcript, opt-in live notes, agenda readiness, questions about the meeting, and a handoff package written to a local project folder.
+- **Windows paste hardening:** clipboard-sequence checks and a paste fallback that respects Windows integrity levels.
+- **The Windows 11 interface,** portable packaging with a version guard, and command-line meeting controls.
 
 ## Architecture
 
@@ -42,7 +55,9 @@ Transcription and cleanup are separate paths. Local speech recognition produces 
 
 ## Evidence
 
-⟦EVIDENCE⟧
+- **Checks (2026-10-16):** lint, format, type and translation checks passed, 120 unit tests passed and 9 Playwright UI tests passed. Rust tests weren't re-run that day.
+- **Offline enforcement:** a test confirms a cloud provider is blocked before any socket opens.
+- **Speed, recorded honestly:** a 252 ms tail finalize after 60.5 s of audio. The 0.6 s p95 end-to-end target was missed on a laptop without a GPU (518 to 663 ms).
 
 ## Scope and limits
 

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1144" height="332" viewBox="0 0 1144 332" role="img" aria-labelledby="t"><title id="t">Mandate Guard: the model interprets the clause, deterministic code decides</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1144" height="332" viewBox="0 0 1144 332" role="img" aria-labelledby="t"><title id="t">Mandate Guard: clauses become predicates, deterministic code decides</title>
 <rect width="1144" height="332" rx="14" fill="#F6F8FB"/>
-<text x="32" y="40" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3A4659">Mandate Guard: the model interprets the clause, deterministic code decides</text>
+<text x="32" y="40" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#3A4659">Mandate Guard: clauses become predicates, deterministic code decides</text>
 <rect x="476" y="50" width="420" height="206" rx="12" fill="none" stroke="#C9D3E1" stroke-width="1.5" stroke-dasharray="5 5"/>
 <text x="488" y="64" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11" letter-spacing=".4" fill="#66738A">DECISION FUNCTION: NO MODEL INSIDE</text>
 <path d="M200 105.0H260" fill="none" stroke="#9AA6B8" stroke-width="1.6"/>
@@ -22,7 +22,7 @@
 <rect x="260" y="72" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#4F46E5" stroke-opacity=".55"/>
 <rect x="260" y="84" width="3" height="42" rx="1.5" fill="#4F46E5"/>
 <text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Tiered parser</text>
-<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">LLM proposes a predicate</text>
+<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">grammar first, then LLM</text>
 <rect x="488" y="72" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#0D9488" stroke-opacity=".55"/>
 <rect x="488" y="84" width="3" height="42" rx="1.5" fill="#0D9488"/>
 <text x="502" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Structured predicate</text>
@@ -42,7 +42,7 @@
 <rect x="944" y="178" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#64748B" stroke-opacity=".55"/>
 <rect x="944" y="190" width="3" height="42" rx="1.5" fill="#64748B"/>
 <text x="958" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Hash-chained audit</text>
-<text x="958" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">JSON / HTML export</text>
+<text x="958" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">tamper-evident JSONL</text>
 <rect x="32" y="297" width="10" height="10" rx="2" fill="#4F46E5"/>
 <text x="48" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#66738A">Model interprets</text>
 <rect x="167.6" y="297" width="10" height="10" rx="2" fill="#0D9488"/>
