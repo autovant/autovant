@@ -20,22 +20,22 @@ The source is private, so each case study shows the product on synthetic data, i
 
 **Visually author, run, inspect and export stateful LangGraph workflows.**
 
-<a href="case-studies/graphforge.md"><img alt="GraphForge: a real LangGraph run paused at a human-review gate, with the reviewer editing the dispatch note before resuming." src="assets/screens/graphforge/graphforge-human-interrupt.png" width="100%"></a>
+<img alt="GraphForge: a real LangGraph run paused at a human-review gate, with the reviewer editing the dispatch note before resuming." src="assets/screens/graphforge/graphforge-human-interrupt.png" width="100%">
 
 ### [Mandate Guard](case-studies/mandate-guard.md)
 
 **Investment restrictions turned into predicates, decided by deterministic code, reviewed by a person.**
 
-<a href="case-studies/mandate-guard.md"><img alt="Mandate Guard document-review workspace: a synthetic waiver letter beside a memo whose numbered evidence links point to the exact source passages, awaiting reviewer confirmation." src="assets/screens/mandate-guard/interpretation-evidence.png" width="100%"></a>
+<img alt="Mandate Guard document-review workspace: a synthetic waiver letter beside a memo whose numbered evidence links point to the exact source passages, awaiting reviewer confirmation." src="assets/screens/mandate-guard/interpretation-evidence.png" width="100%">
 
 ### [Redactor](case-studies/redactor.md)
 
 **Hard-offline de-identification: every file is protected or refused, never passed through.**
 
-<a href="case-studies/redactor.md"><picture>
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screens/redactor/redactor-review-dark.png">
   <img alt="Redactor reviewing two synthetic files before protecting them: one ready, one needing review, with detected categories listed and no values shown." src="assets/screens/redactor/redactor-review-light.png" width="100%">
-</picture></a>
+</picture>
 
 ### More case studies
 
