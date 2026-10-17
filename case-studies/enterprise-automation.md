@@ -30,13 +30,13 @@ Enterprise automation teams do more than build bots. They interpret requirements
 
 | Tool | What it does |
 |---|---|
-| **Blue Prism Workbench** | Deterministic review of Blue Prism processes and objects, artifact generation, release building, plain-language explanation and test-case export. Generation, validation, layout and release packaging go through one engine client; the review rules still parse XML in-app. |
+| **Blue Prism Workbench** | Deterministic review of Blue Prism processes and objects, artifact generation, release building, plain-language explanation and test-case export. Validation, single-page generation, layout scoring and release packaging go through one engine client; the review rules and multi-page generation still have their own XML paths. |
 | **Scribe** | A no-admin OCR utility. One OCR engine sits behind both a headless JSON CLI and a desktop app, with deterministic page processing and a stable output contract. |
 | **OpenVantage** | A CPU-first document pipeline: OCR, classification, schema-bound extraction and tables, with optional OCR-confidence calibration and a revision-aware human review station. Each stage can swap in a heavier model without reshaping the pipeline. |
 
 ## Key decisions
 
-- **One engine for what ships.** Generation, validation, layout and release packaging go through one engine client, so the artifacts a release contains agree on what a file means. The rule-based review parses XML on its own.
+- **Move platform knowledge behind one engine.** Validation, single-page generation, layout scoring and release packaging go through one engine client, so they agree on what a file means. The rule-based review and multi-page generation still have their own XML paths.
 - **Uncertainty routes to a person.** Documents with low confidence, failed validators or inconsistent fields go to a review station instead of being accepted silently. OCR confidence can be calibrated; extraction confidence is left uncalibrated by design.
 - **Work on locked-down machines.** Scribe installs without admin rights and bundles pinned, hash-checked Tesseract and Poppler builds instead of relying on whatever is installed. OpenVantage keeps heavy model weights optional.
 

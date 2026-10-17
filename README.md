@@ -41,7 +41,7 @@ The source is private, so each case study shows the product on synthetic data, i
 
 - **[Conductor](case-studies/conductor.md):** case operations from intake to governed action. Assistance advises, deterministic workers act, people decide.
 - **[Relay Desktop](case-studies/relay.md):** local Windows dictation and meeting notes, with on-device speech recognition first and cloud cleanup only when allowed.
-- **[Enterprise automation tooling](case-studies/enterprise-automation.md):** Blue Prism artifact review and release building, no-admin OCR, and document extraction that routes uncertain fields to a person.
+- **[Enterprise automation tooling](case-studies/enterprise-automation.md):** Blue Prism artifact review and release building, no-admin OCR, and document extraction that routes low-confidence documents to a person.
 
 ## How I build
 
