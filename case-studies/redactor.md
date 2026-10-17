@@ -1,76 +1,56 @@
-# Redactor: Hard-Offline De-identification
+# Redactor
 
-## Problem and users
+**Hard-offline de-identification: every file is protected or refused, never passed through.**
 
-Teams often need to use realistic documents in AI, analytics, testing, or review workflows without disclosing the people and organizations inside them. A simple regex pass is not enough: files can be scanned, nested, malformed, encrypted, or structurally ambiguous, and a "successful" copy can be more dangerous than an explicit refusal.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/redactor/redactor-review-dark.png">
+  <img alt="Redactor portable app, Review before protecting: two synthetic files checked, claim-intake.md needing review and policyholders.csv ready. The privacy-safe preview lists detected categories such as payment card, date, email address and person name without showing any values. The evidence ledger shows hard offline, strict policy, safe mode and an authenticated engine." src="../assets/screens/redactor/redactor-review-light.png" width="100%">
+</picture>
 
-I designed Redactor as a local file-protection product for privacy-conscious operators, developers, and regulated-workflow teams. It supports irreversible protection by default and controlled restoration only when that capability is intentionally requested.
+<sub>The packaged app reviewing two synthetic files before protecting them. The preview shows detected categories, never the values.</sub>
 
-## Constraints and risk boundary
+| Stack | Evidence | Checked |
+|---|---|---|
+| Python · Rust · Tauri · React · portable Windows packaging | 417 Python tests · packaged app run end to end | 2026-10-16 |
 
-- Runtime processing must not depend on cloud OCR, hosted models, telemetry, update checks, or network services.
-- Unsupported, encrypted, damaged, or ambiguous formats must fail closed rather than pass through unchanged.
-- A reversible workflow must never create a cleartext recovery map implicitly.
-- One failed item in a directory job must prevent staged outputs from being published as a complete safe result.
-- Windows delivery must work without requiring an administrator-managed installation path.
-- Verification must separate parser behavior, detection quality, output integrity, UI behavior, and observed offline runtime.
+## The problem
 
-## Architecture and key decisions
+Teams want realistic documents for AI, analytics, testing and review without exposing the people and organisations inside them. A regex pass isn't enough. Files can be scanned, nested, malformed, encrypted or structurally ambiguous, and a copy that looks successful can be more dangerous than a clear refusal. Redactor is a local file-protection product for privacy-conscious operators, developers and regulated-workflow teams.
 
-```mermaid
-flowchart LR
-    A[Files or folders] --> B{Assurance classification}
-    B -->|Supported| C[Authoritative Python engine]
-    B -->|Unsupported or ambiguous| R[Refuse with reason]
-    C --> D{Protection mode}
-    D -->|Safe| E[Irreversible protected output]
-    D -->|Roundtrip| F[Protected output]
-    D -->|Roundtrip| G[Separate encrypted map]
-    E --> H[Evidence and verification]
-    F --> H
-    G --> I[Explicit local restore]
-    I --> H
-```
+## Architecture
 
-The authoritative engine owns detection, transformation, refusal, and evidence semantics. A Tauri/Rust desktop shell and other integrations consume versioned contracts rather than reimplementing the privacy rules.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/redactor-dark.svg">
+  <img alt="Redactor architecture, entirely hard-offline: files or folders pass an assurance check that either refuses them with a reason or sends them to the Python engine for detection and transformation. Safe mode writes irreversible output to an evidence ledger that verifies before publishing. Roundtrip mode writes protected output plus a separate encrypted map that stays on the machine, and an explicit restore step rejects unknown tokens." src="../assets/diagrams/redactor-light.svg" width="100%">
+</picture>
 
-The most important product decision is the assurance classification. Every input must be transformed, recursively processed, or refused. "Copied because the parser could not understand it" is not an acceptable success state.
+One authoritative Python engine owns detection, transformation, refusal and evidence semantics. The Tauri/Rust desktop shell and other integrations consume versioned contracts instead of reimplementing the privacy rules.
 
-Safe mode is intentionally irreversible. Roundtrip mode creates a separate authenticated, encrypted restoration map; the map never accompanies protected files to an AI system. Restoration rejects missing, malformed, unknown, or ambiguous tokens.
+## Key decisions
 
-## What I designed and delivered
+- **Transform, recurse or refuse.** Every input gets classified. "Copied because the parser couldn't understand it" is never a success state. Legacy Office binaries, macro-enabled files, encrypted PDFs and unknown binaries are refused with a reason.
+- **Irreversible by default.** Safe mode can't be undone. Roundtrip mode writes a separate, authenticated, encrypted restoration map that never travels with the protected files, and restore rejects malformed, unknown or ambiguous tokens. Tokens an LLM simply left out of its answer are allowed.
+- **All or nothing for folders.** Directory jobs stage their outputs, and one failed item stops the set from being published as complete and safe.
 
-- A cross-platform Python engine and command-line interface with fail-closed format handling.
-- A portable Windows desktop experience with local engine authentication and constrained WebView behavior.
-- Separate Safe and Roundtrip workflows, including explicit restoration-impact review.
-- Directory-level staging so partial failure cannot be mistaken for a complete protected set.
-- Evidence ledgers, report schemas, dependency inventories, SBOM material, and release verification.
-- Multi-runtime contract boundaries for desktop and integration surfaces.
-- A source-release path that reopens its own archive and verifies every member hash.
+## What I built
 
-## Verification evidence
+- A cross-platform Python engine and CLI with fail-closed format handling.
+- A portable Windows desktop app that needs no admin install, with local engine authentication and a constrained WebView.
+- Separate Safe and Roundtrip workflows, including a review of the restoration impact.
+- Evidence ledgers, report schemas, dependency inventories, SBOM material and release verification.
+- A source-release path that reopens its own archive and verifies every member's hash.
 
-A dated 2026-08-16 release record documented independent gates rather than one aggregate "green" status. At that checkpoint, the repository recorded:
+## Evidence
 
-- 325 Python tests plus 21 extension subtests.
-- 30 desktop unit, component, and contract checks.
-- 33 Rust unit tests with warnings denied by Clippy.
-- 196 complete-workflow browser checks.
-- 565 production-bundle visual-matrix checks.
-- A 53-fixture corpus with expected outcomes and no damaged controls.
-- Portable release and observed hard-offline process checks.
+- **Tests (2026-10-16):** 417 Python tests passed (12 skipped), Ruff was clean, and release verification passed on the source tree.
+- **Packaged app:** the portable build was made from source and driven end to end on synthetic files: Safe protect, Roundtrip protect, and restore of an LLM answer (18 mapping entries authenticated, 3 tokens restored, 0 unresolved).
+- **Refusals:** the CLI refuses a legacy `.xls` and a macro-enabled `.docm`, each with a stated reason.
 
-Those counts describe that dated release checkpoint, not a fresh rerun of the current head. The current source still contains the evidence index and reproduction commands, but I keep the historical scope explicit.
+## Scope and limits
 
-## Honest limitations
+- Detection isn't infallible. OCR evidence so far is English-focused, and handwriting or low-quality scans can still be missed.
+- Safe projection can reduce visual fidelity for some formats.
+- In the desktop app, a `.docm` shows as ready at the check step and is refused only at protect, and a refused file added on its own fails the whole check with a generic message rather than a per-file reason.
+- Redactor is a privacy engineering tool, not a legal determination or a compliance certification.
 
-- Detection is not infallible.
-- The first portable OCR evidence was English-focused; handwriting and low-quality scans can still be missed.
-- Legacy Office binaries, macro-enabled Office files, encrypted PDFs, and unknown binaries are refused.
-- Safe projection can change visual fidelity for some formats.
-- Native Windows 11 Mica remained an unobserved physical-hardware evidence class in the dated release record.
-- Redactor is a privacy engineering tool, not a legal determination or compliance certification.
-
-## Skills demonstrated
-
-Privacy architecture, offline assurance, fail-closed design, encrypted data formats, Python, Rust, Tauri, React, Windows packaging, multi-runtime contracts, evidence engineering, supply-chain review, accessibility, and release verification.
+[← Back to profile](../README.md)

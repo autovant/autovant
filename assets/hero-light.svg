@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="300" viewBox="0 0 1280 300" role="img" aria-labelledby="t"><title id="t">Samad Shareef: Applied AI Engineer, AI and Automation Architect. Models interpret, policy decides, humans approve, actions are audited.</title>
+<defs><pattern id="g" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#C9D3E1" stroke-opacity=".35"/></pattern></defs>
+<rect width="1280" height="300" rx="18" fill="#F6F8FB"/>
+<rect x="700" y="0" width="580" height="300" fill="url(#g)"/>
+<text x="64" y="86" font-family="ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace" font-size="17" letter-spacing="2.5" fill="#0D9488">APPLIED AI · AUTOMATION ARCHITECTURE</text>
+<text x="60" y="160" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="66" font-weight="700" fill="#0B1220">Samad Shareef</text>
+<text x="64" y="212" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="27" fill="#3A4659">Governed agents, local-first AI,</text>
+<text x="64" y="246" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="27" fill="#3A4659">and enterprise automation.</text>
+<rect x="740" y="100" width="100" height="100" rx="16" fill="#FFFFFF" stroke="#4F46E5" stroke-opacity=".6"/>
+<circle cx="790" cy="134" r="7" fill="#4F46E5"/>
+<text x="790" y="164" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#0B1220">Model</text>
+<text x="790" y="184" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="13" fill="#66738A">interprets</text>
+<path d="M834 150H868" stroke="#9AA6B8" stroke-width="2"/>
+<polygon points="865,145.5 872,150 865,154.5" fill="#9AA6B8"/>
+<rect x="872" y="100" width="100" height="100" rx="16" fill="#FFFFFF" stroke="#0D9488" stroke-opacity=".6"/>
+<circle cx="922" cy="134" r="7" fill="#0D9488"/>
+<text x="922" y="164" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#0B1220">Policy</text>
+<text x="922" y="184" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="13" fill="#66738A">decides</text>
+<path d="M966 150H1000" stroke="#9AA6B8" stroke-width="2"/>
+<polygon points="997,145.5 1004,150 997,154.5" fill="#9AA6B8"/>
+<rect x="1004" y="100" width="100" height="100" rx="16" fill="#FFFFFF" stroke="#B45309" stroke-opacity=".6"/>
+<circle cx="1054" cy="134" r="7" fill="#B45309"/>
+<text x="1054" y="164" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#0B1220">Human</text>
+<text x="1054" y="184" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="13" fill="#66738A">approves</text>
+<path d="M1098 150H1132" stroke="#9AA6B8" stroke-width="2"/>
+<polygon points="1129,145.5 1136,150 1129,154.5" fill="#9AA6B8"/>
+<rect x="1136" y="100" width="100" height="100" rx="16" fill="#FFFFFF" stroke="#64748B" stroke-opacity=".6"/>
+<circle cx="1186" cy="134" r="7" fill="#64748B"/>
+<text x="1186" y="164" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="18" font-weight="600" fill="#0B1220">Action</text>
+<text x="1186" y="184" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="13" fill="#66738A">is audited</text>
+</svg>

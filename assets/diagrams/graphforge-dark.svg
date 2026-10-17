@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1144" height="332" viewBox="0 0 1144 332" role="img" aria-labelledby="t"><title id="t">GraphForge: the typed graph IR drives the canvas, runtime and export</title>
+<rect width="1144" height="332" rx="14" fill="#111B2E"/>
+<text x="32" y="40" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="15" font-weight="600" fill="#A9B4C7">GraphForge: the typed graph IR drives the canvas, runtime and export</text>
+<path d="M200 105.0H260" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="253,100.5 260,105.0 253,109.5" fill="#52617D"/>
+<path d="M200 211.0H260" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="253,206.5 260,211.0 253,215.5" fill="#52617D"/>
+<text x="230.0" y="204.0" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11" fill="#7C89A1">proposal</text>
+<path d="M344.0 178V138" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="339.5,145 344.0,138 348.5,145" fill="#52617D"/>
+<path d="M428 105.0H488" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="481,100.5 488,105.0 481,109.5" fill="#52617D"/>
+<path d="M428 105.0H450.0Q458.0 105.0 458.0 113.0V203.0Q458.0 211.0 466.0 211.0H488" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="481,206.5 488,211.0 481,215.5" fill="#52617D"/>
+<path d="M656 105.0H716" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="709,100.5 716,105.0 709,109.5" fill="#52617D"/>
+<path d="M800.0 138V178" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="795.5,171 800.0,178 804.5,171" fill="#52617D"/>
+<path d="M884 105.0H944" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="937,100.5 944,105.0 937,109.5" fill="#52617D"/>
+<path d="M884 105.0H906.0Q914.0 105.0 914.0 113.0V203.0Q914.0 211.0 922.0 211.0H944" fill="none" stroke="#52617D" stroke-width="1.6"/>
+<polygon points="937,206.5 944,211.0 937,215.5" fill="#52617D"/>
+<rect x="32" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#CBD5E1" stroke-opacity=".55"/>
+<rect x="32" y="84" width="3" height="42" rx="1.5" fill="#CBD5E1"/>
+<text x="46" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Visual canvas</text>
+<text x="46" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">edits the graph IR</text>
+<rect x="32" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#818CF8" stroke-opacity=".55"/>
+<rect x="32" y="190" width="3" height="42" rx="1.5" fill="#818CF8"/>
+<text x="46" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Graph assistant</text>
+<text x="46" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">drafts a Blueprint</text>
+<rect x="260" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="260" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Typed graph IR</text>
+<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">single source of truth</text>
+<rect x="260" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="260" y="190" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="274" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Typed Blueprint</text>
+<text x="274" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">pure compile to IR</text>
+<rect x="488" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="488" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="502" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Validate + compile</text>
+<text x="502" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">before anything runs</text>
+<rect x="488" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#CBD5E1" stroke-opacity=".55"/>
+<rect x="488" y="190" width="3" height="42" rx="1.5" fill="#CBD5E1"/>
+<text x="502" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Python export</text>
+<text x="502" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">runs outside the product</text>
+<rect x="716" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="716" y="84" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="730" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">LangGraph runtime</text>
+<text x="730" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">real streaming execution</text>
+<rect x="716" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#2DD4BF" stroke-opacity=".55"/>
+<rect x="716" y="190" width="3" height="42" rx="1.5" fill="#2DD4BF"/>
+<text x="730" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Tools and MCP</text>
+<text x="730" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">MCP allowlist, timeouts</text>
+<rect x="944" y="72" width="168" height="66" rx="10" fill="#0B1220" stroke="#FBBF24" stroke-opacity=".55"/>
+<rect x="944" y="84" width="3" height="42" rx="1.5" fill="#FBBF24"/>
+<text x="958" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Human interrupt</text>
+<text x="958" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">approve or edit, resume</text>
+<rect x="944" y="178" width="168" height="66" rx="10" fill="#0B1220" stroke="#94A3B8" stroke-opacity=".55"/>
+<rect x="944" y="190" width="3" height="42" rx="1.5" fill="#94A3B8"/>
+<text x="958" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#F2F5FA">Checkpoints</text>
+<text x="958" y="225" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#7C89A1">replay and time travel</text>
+<rect x="32" y="297" width="10" height="10" rx="2" fill="#818CF8"/>
+<text x="48" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Model interprets</text>
+<rect x="167.6" y="297" width="10" height="10" rx="2" fill="#2DD4BF"/>
+<text x="183.6" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Deterministic code</text>
+<rect x="316.4" y="297" width="10" height="10" rx="2" fill="#FBBF24"/>
+<text x="332.4" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Human decision</text>
+<rect x="438.79999999999995" y="297" width="10" height="10" rx="2" fill="#94A3B8"/>
+<text x="454.79999999999995" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">State / evidence</text>
+<rect x="574.4" y="297" width="10" height="10" rx="2" fill="#CBD5E1"/>
+<text x="590.4" y="306" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="11.5" fill="#7C89A1">Input / output</text>
+</svg>
