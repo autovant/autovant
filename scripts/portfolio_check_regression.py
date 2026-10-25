@@ -276,6 +276,12 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "unspaced closing hashes cannot alter a required H2 title",
+            "## Fixture section###\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "empty README section list is rejected",
             "## Fixture section\n",
             [],

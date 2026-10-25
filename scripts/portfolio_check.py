@@ -262,7 +262,7 @@ def main() -> int:
             visible, in_readme_comment = strip_html_comments(raw_line, in_readme_comment)
             if comment_was_open or not re.match(r"^ {0,3}##[ \t]+", raw_line):
                 continue
-            heading = re.match(r"^ {0,3}##[ \t]+(.+?)\s*#*\s*$", visible)
+            heading = re.match(r"^ {0,3}##[ \t]+(.+?)(?:[ \t]+#+)?[ \t]*$", visible)
             if heading and heading.group(1).strip():
                 visible_headings.add(heading.group(1).strip())
         for heading in readme_sections:
