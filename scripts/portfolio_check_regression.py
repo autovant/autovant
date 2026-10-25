@@ -478,6 +478,7 @@ def main() -> int:
             + "\n".join(ledger_table_lines)
             + "\n-->\n"
         )
+        unmatched_backtick_comment_decoy = "`\n" + commented_ledger_decoy
         indented_table = "\n".join("    " + line for line in ledger_table_lines)
         empty_lines = empty_canonical_ledger.splitlines()
         canonical_header_index = empty_lines.index(ledger_header_row)
@@ -647,6 +648,12 @@ def main() -> int:
                 deepcopy(manifest_source),
                 inline_comment_decoy,
                 "undeclared-after-inline-code: evidence ledger claim ID is not declared in the manifest",
+            ),
+            (
+                "unmatched backtick cannot expose a commented ledger",
+                deepcopy(manifest_source),
+                unmatched_backtick_comment_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
             (
                 "second canonical ledger section after an intervening heading is rejected",

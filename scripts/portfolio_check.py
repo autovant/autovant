@@ -170,33 +170,16 @@ def main() -> int:
         cells.append("".join(cell).strip().replace("\\|", "|"))
         return cells
 
-    def strip_html_comments(
-        line: str, in_comment: bool, inline_code_ticks: int | None
-    ) -> tuple[str, bool, int | None]:
+    def strip_html_comments(line: str, in_comment: bool) -> tuple[str, bool]:
         visible: list[str] = []
         cursor = 0
         while cursor < len(line):
             if in_comment:
                 closing = line.find("-->", cursor)
                 if closing < 0:
-                    return "".join(visible), True, inline_code_ticks
+                    return "".join(visible), True
                 cursor = closing + 3
                 in_comment = False
-                continue
-
-            if inline_code_ticks is not None:
-                code_end = line.find("`", cursor)
-                if code_end < 0:
-                    visible.append(line[cursor:])
-                    return "".join(visible), False, inline_code_ticks
-                visible.append(line[cursor:code_end])
-                run_end = code_end
-                while run_end < len(line) and line[run_end] == "`":
-                    run_end += 1
-                visible.append(line[code_end:run_end])
-                if run_end - code_end == inline_code_ticks:
-                    inline_code_ticks = None
-                cursor = run_end
                 continue
 
             opening = line.find("<!--", cursor)
@@ -206,22 +189,35 @@ def main() -> int:
                 run_end = code_start
                 while run_end < len(line) and line[run_end] == "`":
                     run_end += 1
-                visible.append(line[code_start:run_end])
-                inline_code_ticks = run_end - code_start
-                cursor = run_end
+                run_length = run_end - code_start
+                code_end = line.find("`", run_end)
+                matching_end = None
+                while code_end >= 0:
+                    candidate_end = code_end
+                    while candidate_end < len(line) and line[candidate_end] == "`":
+                        candidate_end += 1
+                    if candidate_end - code_end == run_length:
+                        matching_end = candidate_end
+                        break
+                    code_end = line.find("`", candidate_end)
+                if matching_end is None:
+                    visible.append(line[code_start:run_end])
+                    cursor = run_end
+                else:
+                    visible.append(line[code_start:matching_end])
+                    cursor = matching_end
                 continue
             if opening < 0:
                 visible.append(line[cursor:])
-                return "".join(visible), False, None
+                return "".join(visible), False
             visible.append(line[cursor:opening])
             cursor = opening + 4
             in_comment = True
-        return "".join(visible), in_comment, inline_code_ticks
+        return "".join(visible), in_comment
 
     ledger_rows: dict[str, list[list[str]]] = {}
     fence: tuple[str, int] | None = None
     in_html_comment = False
-    inline_code_ticks: int | None = None
     in_ledger_section = False
     saw_ledger_section = False
     header_found = False
@@ -234,20 +230,15 @@ def main() -> int:
             and not in_html_comment
             and (raw_line.startswith("    ") or raw_line.startswith("\t"))
         ):
-            inline_code_ticks = None
             continue
         raw_fence_match = re.match(r"^(`{3,}|~{3,})", raw_line.strip())
         if fence is None and raw_fence_match and not in_html_comment:
             line = raw_line
-            inline_code_ticks = None
         elif fence is None:
-            line, in_html_comment, inline_code_ticks = strip_html_comments(
-                raw_line, in_html_comment, inline_code_ticks
-            )
+            line, in_html_comment = strip_html_comments(raw_line, in_html_comment)
         else:
             line = raw_line
         if line.startswith("    ") or line.startswith("\t"):
-            inline_code_ticks = None
             continue
         stripped = line.strip()
         fence_match = re.match(r"^(`{3,}|~{3,})", stripped)
