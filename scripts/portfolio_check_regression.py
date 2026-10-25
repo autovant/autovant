@@ -691,6 +691,13 @@ def main() -> int:
             None,
         ):
             return 1
+        if not run_case(
+            "indented code comment marker does not hide the canonical ledger",
+            deepcopy(manifest_source),
+            "    <!-- example source comment\n\n" + evidence_source,
+            None,
+        ):
+            return 1
     return 0
 
 

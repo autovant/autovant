@@ -199,6 +199,12 @@ def main() -> int:
     table_ended = False
     ledger_width = len(ledger_header)
     for raw_line in evidence_doc.splitlines():
+        if (
+            fence is None
+            and not in_html_comment
+            and (raw_line.startswith("    ") or raw_line.startswith("\t"))
+        ):
+            continue
         if fence is None:
             line, in_html_comment = strip_html_comments(raw_line, in_html_comment)
         else:
