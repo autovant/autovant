@@ -78,7 +78,7 @@ def main() -> int:
     missing = sorted(required - data.keys())
     if missing:
         fail("manifest missing fields: " + ", ".join(missing))
-    if data.get("schema_version") != 1:
+    if type(data.get("schema_version")) is not int or data["schema_version"] != 1:
         fail("schema_version must be 1")
     for key in ("project", "summary", "revision_scope"):
         if not isinstance(data.get(key), str) or not data[key].strip():
@@ -143,6 +143,13 @@ def main() -> int:
         fail("claims must be a non-empty list")
         claims = []
     evidence_doc = doc_paths["evidence"].read_text(encoding="utf-8") if doc_paths["evidence"] else ""
+    ledger_rows: dict[str, list[list[str]]] = {}
+    for line in evidence_doc.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) == 5 and cells[0] != "Claim ID":
+            ledger_rows.setdefault(cells[0], []).append(cells)
     ids: set[str] = set()
     for claim in claims:
         if not isinstance(claim, dict):
@@ -178,13 +185,21 @@ def main() -> int:
                 fail(f"{claim_id}: evidence scope is required")
         if status == "verified" and not classes.intersection(PRIMARY):
             fail(f"{claim_id}: verified claims need primary evidence")
-        if (
-            claim_id not in evidence_doc
-            or not isinstance(status, str)
-            or status not in evidence_doc
-            or exact not in evidence_doc
-        ):
-            fail(f"{claim_id}: evidence ledger must repeat exact text and status")
+        rows = ledger_rows.get(claim_id, [])
+        if len(rows) != 1:
+            fail(f"{claim_id}: evidence ledger must contain exactly one claim row")
+        else:
+            row = rows[0]
+            if row[1] != exact:
+                fail(f"{claim_id}: evidence ledger claim text does not match the manifest")
+            if row[2] != status:
+                fail(f"{claim_id}: evidence ledger status does not match the manifest")
+            expected_refs = [
+                ref["ref"] for ref in refs
+                if isinstance(ref, dict) and isinstance(ref.get("ref"), str)
+            ]
+            if row[3] != "; ".join(expected_refs):
+                fail(f"{claim_id}: evidence ledger references do not match the manifest")
         if not isinstance(claim.get("proof_limit"), str) or not claim["proof_limit"].strip():
             fail(f"{claim_id}: proof_limit is required")
     if not isinstance(data.get("limitations"), list) or not data["limitations"]:
@@ -199,8 +214,13 @@ def main() -> int:
     for path in public:
         if not path.is_file():
             continue
+        try:
+            path.resolve().relative_to(root)
+        except ValueError:
+            fail(f"public document path escapes repository: {path}")
+            continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        label = path.relative_to(root)
+        label = path.resolve().relative_to(root)
         if PLACEHOLDER.search(text):
             fail(f"{label}: placeholder text found")
         if MACHINE_PATH.search(text):
