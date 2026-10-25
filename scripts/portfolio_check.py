@@ -153,6 +153,8 @@ def main() -> int:
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
         if len(cells) == 5 and cells[0] != "Claim ID":
+            if all(re.fullmatch(r":?-+:?", cell) for cell in cells):
+                continue
             ledger_rows.setdefault(cells[0], []).append(cells)
     ids: set[str] = set()
     for claim in claims:
@@ -206,6 +208,8 @@ def main() -> int:
                 fail(f"{claim_id}: evidence ledger references do not match the manifest")
         if not isinstance(claim.get("proof_limit"), str) or not claim["proof_limit"].strip():
             fail(f"{claim_id}: proof_limit is required")
+    for ledger_id in ledger_rows.keys() - ids:
+        fail(f"{ledger_id}: evidence ledger claim ID is not declared in the manifest")
     if not isinstance(data.get("limitations"), list) or not data["limitations"]:
         fail("limitations must be a non-empty list")
 

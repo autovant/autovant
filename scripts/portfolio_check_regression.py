@@ -369,9 +369,23 @@ def main() -> int:
                 evidence_source,
                 f"{claim_id}: evidence ledger references do not match the manifest",
             ),
+            (
+                "undeclared ledger claim ID rejected",
+                deepcopy(manifest_source),
+                evidence_source.rstrip()
+                + "\n| undeclared-ledger-claim | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |\n",
+                "undeclared-ledger-claim: evidence ledger claim ID is not declared in the manifest",
+            ),
+            (
+                "duplicate declared claim ID rejected",
+                deepcopy(manifest_source),
+                evidence_source,
+                f"duplicate claim id: {claim_id}",
+            ),
         ]
         cases[1][1]["claims"][career_index]["text"] += " (changed)"
         cases[2][1]["claims"][career_index]["evidence"][0]["ref"] = "LICENSE.md"
+        cases[4][1]["claims"].append(deepcopy(cases[4][1]["claims"][career_index]))
         for label, manifest_data, evidence_text, expected in cases:
             if not run_case(label, manifest_data, evidence_text, expected):
                 return 1
