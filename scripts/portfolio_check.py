@@ -171,6 +171,14 @@ def main() -> int:
         return cells
 
     def strip_html_comments(line: str, in_comment: bool) -> tuple[str, bool]:
+        def is_escaped_backtick(index: int) -> bool:
+            backslashes = 0
+            index -= 1
+            while index >= 0 and line[index] == "\\":
+                backslashes += 1
+                index -= 1
+            return backslashes % 2 == 1
+
         visible: list[str] = []
         cursor = 0
         while cursor < len(line):
@@ -184,6 +192,15 @@ def main() -> int:
 
             opening = line.find("<!--", cursor)
             code_start = line.find("`", cursor)
+            while code_start >= 0 and is_escaped_backtick(code_start):
+                escaped_run_end = code_start
+                while escaped_run_end < len(line) and line[escaped_run_end] == "`":
+                    escaped_run_end += 1
+                code_start = (
+                    code_start + 1
+                    if code_start + 1 < escaped_run_end
+                    else line.find("`", escaped_run_end)
+                )
             if code_start >= 0 and (opening < 0 or code_start < opening):
                 visible.append(line[cursor:code_start])
                 run_end = code_start

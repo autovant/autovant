@@ -479,6 +479,11 @@ def main() -> int:
             + "\n-->\n"
         )
         unmatched_backtick_comment_decoy = "`\n" + commented_ledger_decoy
+        escaped_backtick_comment_decoy = (
+            "\\`<!-- `\n# Evidence ledger\n\n"
+            + "\n".join(ledger_table_lines)
+            + "\n-->\n"
+        )
         indented_table = "\n".join("    " + line for line in ledger_table_lines)
         empty_lines = empty_canonical_ledger.splitlines()
         canonical_header_index = empty_lines.index(ledger_header_row)
@@ -653,6 +658,12 @@ def main() -> int:
                 "unmatched backtick cannot expose a commented ledger",
                 deepcopy(manifest_source),
                 unmatched_backtick_comment_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "escaped backtick cannot expose a commented ledger",
+                deepcopy(manifest_source),
+                escaped_backtick_comment_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
             (
