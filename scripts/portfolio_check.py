@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 STATUSES = {"verified", "partially_verified", "unverified"}
-PRIMARY = {"source", "test", "artifact", "source-inventory"}
+PRIMARY = {"source", "test", "source-inventory"}
 PLACEHOLDER = re.compile(
     r"\b(?:TODO|TBD|FIXME|YOUR_NAME|REPLACE_ME)\b|\[(?:add|insert|replace)\b|<your\b", re.I
 )
@@ -358,7 +358,7 @@ def main() -> int:
             if not isinstance(ref.get("scope"), str) or not ref["scope"].strip():
                 fail(f"{claim_id}: evidence scope is required")
         if status == "verified" and not classes.intersection(PRIMARY):
-            fail(f"{claim_id}: verified claims need primary evidence")
+            fail(f"{claim_id}: verified claims need source, test, or source-inventory evidence")
         rows = ledger_rows.get(claim_id, [])
         if len(rows) != 1:
             fail(f"{claim_id}: evidence ledger must contain exactly one claim row")

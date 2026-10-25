@@ -314,19 +314,62 @@ def main() -> int:
         cells.append("".join(cell).strip().replace("\\|", "|"))
         return cells
 
-    def change_ledger_cells(text: str, changes: dict[int, str]) -> str:
+    def change_ledger_cells(
+        text: str,
+        changes: dict[int, str],
+        target_id: str = claim_id,
+    ) -> str:
         lines = text.splitlines()
         for index, line in enumerate(lines):
-            if ledger_cells(line)[0] == claim_id:
+            if ledger_cells(line)[0] == target_id:
                 cells = ledger_cells(line)
                 for column, value in changes.items():
                     cells[column] = value
                 lines[index] = "| " + " | ".join(cell.replace("|", "\\|") for cell in cells) + " |"
                 return "\n".join(lines) + "\n"
-        raise ValueError(f"missing ledger row: {claim_id}")
+        raise ValueError(f"missing ledger row: {target_id}")
 
-    def change_ledger_cell(text: str, column: int, value: str) -> str:
-        return change_ledger_cells(text, {column: value})
+    def change_ledger_cell(
+        text: str,
+        column: int,
+        value: str,
+        target_id: str = claim_id,
+    ) -> str:
+        return change_ledger_cells(text, {column: value}, target_id)
+
+    def check_prominent_readme_claim_ids() -> bool:
+        expected = {
+            "autovant-graphforge-capabilities":
+                "Visually author, run, inspect and export stateful LangGraph workflows.",
+            "autovant-graphforge-human-interrupt":
+                "GraphForge: a real LangGraph run paused at a human-review gate, with the reviewer editing the dispatch note before resuming.",
+            "autovant-relay-workflow":
+                "local Windows dictation and meeting notes, with on-device speech recognition first and cloud cleanup only when allowed.",
+            "autovant-enterprise-automation-workflows":
+                "Blue Prism artifact review and release building, no-admin OCR, and document extraction that routes low-confidence documents to a person.",
+        }
+        readme_text = (root / "README.md").read_text(encoding="utf-8")
+        claims_by_id = {
+            claim.get("id"): claim
+            for claim in manifest_source["claims"]
+            if isinstance(claim, dict)
+        }
+        missing = [
+            claim_id
+            for claim_id, text in expected.items()
+            if text not in readme_text
+            or claim_id not in claims_by_id
+            or claims_by_id[claim_id].get("text") != text
+            or claims_by_id[claim_id].get("status") != "partially_verified"
+        ]
+        if missing:
+            print(
+                "FAIL: prominent README behavior claims need stable, partially verified IDs: "
+                + ", ".join(missing)
+            )
+            return False
+        print("PASS: prominent README behavior claims have stable, partially verified IDs")
+        return True
 
     def find_ledger_row(text: str, target_id: str) -> str:
         for line in text.splitlines():
@@ -376,6 +419,8 @@ def main() -> int:
                     break
                 lines[index] = stripped.strip("|").strip()
         return "\n".join(lines) + "\n"
+
+    readme_claim_coverage_passed = check_prominent_readme_claim_ids()
 
     with fixture_directory(root) as fixture_path:
         fixture = Path(fixture_path)
@@ -436,6 +481,11 @@ def main() -> int:
             return True
 
         career_index = next(i for i, claim in enumerate(manifest_source["claims"]) if claim["id"] == claim_id)
+        graphforge_claim_id = "autovant-graphforge-tests"
+        graphforge_claim_index = next(
+            i for i, claim in enumerate(manifest_source["claims"])
+            if claim["id"] == graphforge_claim_id
+        )
         target_row = find_ledger_row(evidence_source, claim_id)
         unwrapped_target_row = target_row.strip().strip("|").strip()
         unknown_claim_row = (
@@ -549,6 +599,18 @@ def main() -> int:
         missing_exe_pipe_manifest, missing_exe_pipe_evidence = missing_evidence_case(
             ".exe", escaped_pipe_before_path=True
         )
+        screenshot_verified_manifest = deepcopy(manifest_source)
+        screenshot_verified_claim = screenshot_verified_manifest["claims"][graphforge_claim_index]
+        screenshot_ref = next(
+            ref for ref in screenshot_verified_claim["evidence"] if ref["class"] == "artifact"
+        )
+        screenshot_verified_claim["status"] = "verified"
+        screenshot_verified_claim["evidence"] = [deepcopy(screenshot_ref)]
+        screenshot_verified_evidence = change_ledger_cells(
+            evidence_source,
+            {2: "verified", 3: screenshot_ref["ref"]},
+            graphforge_claim_id,
+        )
         missing_path_forbidden = (
             f"{claim_id}: evidence ledger must contain exactly one claim row",
             f"{claim_id}: evidence ledger claim text does not match the manifest",
@@ -572,6 +634,12 @@ def main() -> int:
                 deepcopy(manifest_source),
                 evidence_source,
                 f"{claim_id}: evidence ledger references do not match the manifest",
+            ),
+            (
+                "screenshot alone cannot verify a test-count claim",
+                screenshot_verified_manifest,
+                screenshot_verified_evidence,
+                f"{graphforge_claim_id}: verified claims need source, test, or source-inventory evidence",
             ),
             (
                 "undeclared ledger claim ID rejected",
@@ -743,7 +811,7 @@ def main() -> int:
             forbidden = case[4] if len(case) == 5 else ()
             if not run_case(label, manifest_data, evidence_text, expected, forbidden):
                 cases_passed = False
-        if not cases_passed:
+        if not cases_passed or not readme_claim_coverage_passed:
             return 1
         if not run_case(
             "valid all-unwrapped GFM ledger accepted",

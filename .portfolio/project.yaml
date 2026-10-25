@@ -102,6 +102,32 @@
       "proof_limit": "No matching test receipt or source SHA is included; the current source main reports a different test collection and is documented separately below."
     },
     {
+      "id": "autovant-graphforge-capabilities",
+      "text": "Visually author, run, inspect and export stateful LangGraph workflows.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/graphforge.md",
+          "class": "secondary",
+          "scope": "The dated case study describes these GraphForge capabilities, but does not bind them to a pinned source revision or fresh execution receipt."
+        }
+      ],
+      "proof_limit": "No pinned product source SHA or fresh end-to-end execution receipt is included to verify every listed capability."
+    },
+    {
+      "id": "autovant-graphforge-human-interrupt",
+      "text": "GraphForge: a real LangGraph run paused at a human-review gate, with the reviewer editing the dispatch note before resuming.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "assets/screens/graphforge/graphforge-human-interrupt.png",
+          "class": "artifact",
+          "scope": "The image depicts one captured GraphForge human-interrupt review state with synthetic incident data."
+        }
+      ],
+      "proof_limit": "The screenshot depicts one recorded state; no pinned source revision or execution receipt verifies the run or current product behavior."
+    },
+    {
       "id": "autovant-mandate-guard-benchmark",
       "text": "384 determinations, 0 differences over 5 runs · 172 tests",
       "status": "partially_verified",
@@ -172,6 +198,24 @@
         }
       ],
       "proof_limit": "The case study explicitly says these are not one deployed customer platform; source revisions and test receipts are not included."
+    },
+    {
+      "id": "autovant-enterprise-automation-workflows",
+      "text": "Blue Prism artifact review and release building, no-admin OCR, and document extraction that routes low-confidence documents to a person.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/enterprise-automation.md",
+          "class": "secondary",
+          "scope": "The dated case study describes these capabilities across three related private tools; it retains the open Scribe failure and the separate tool boundaries."
+        },
+        {
+          "ref": "assets/screens/enterprise/openvantage-review-station-light.png",
+          "class": "artifact",
+          "scope": "The screenshot shows one synthetic OpenVantage review state, not the other tools or an end-to-end run."
+        }
+      ],
+      "proof_limit": "Source revisions and current execution receipts are not included; the three tools are not one deployed customer platform."
     },
     {
       "id": "autovant-public-superpowers",
@@ -295,6 +339,24 @@
         }
       ],
       "proof_limit": "The test source, output, and product revision are not included; this does not qualify live network behavior."
+    },
+    {
+      "id": "autovant-relay-workflow",
+      "text": "local Windows dictation and meeting notes, with on-device speech recognition first and cloud cleanup only when allowed.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/relay.md",
+          "class": "secondary",
+          "scope": "The dated case study describes the local transcription and optional cleanup paths; it says the UI capture used sample data and a test-harness backend."
+        },
+        {
+          "ref": "assets/screens/relay/relay-privacy-light.png",
+          "class": "artifact",
+          "scope": "The image shows settings and policy labels, not live transcription or network activity."
+        }
+      ],
+      "proof_limit": "No pinned source revision, fresh transcription result, or network trace verifies the described end-to-end path or provider policy."
     }
   ],
   "limitations": [
