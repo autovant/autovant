@@ -1,0 +1,308 @@
+{
+  "schema_version": 1,
+  "project": "Autovant Engineering Portfolio",
+  "level": "supporting",
+  "summary": "A publication repository for selected engineering case studies, architecture diagrams, and synthetic or sample screenshots; it does not contain the private product applications.",
+  "source_base": "origin/main@b59f8645e7c64d08d9dd24e19a3a66681ebd28a4",
+  "revision_scope": "This manifest inventories the profile repository at this readiness branch. The checker reports its exact Git HEAD. Product-source revisions are not recorded for most case studies, so dated claims remain partial or unverified.",
+  "supported_environment": {
+    "runtime": "Markdown-capable viewer; no product runtime is included.",
+    "package_manager": "Not applicable to this documentation and asset repository."
+  },
+  "commands": {
+    "run": null,
+    "run_status": "Not an executable product repository; the tracked files are publication text and assets.",
+    "test": null,
+    "test_status": "No application or product test suite is included. The profile checker validates only this publication packet.",
+    "demo": null,
+    "demo_status": "There is no runnable product demo in this repository; use the static interview walkthrough instructions.",
+    "demo_instructions": "docs/demo.md"
+  },
+  "readme_sections": [
+    "What this repository contains",
+    "Selected systems",
+    "How I build",
+    "Evidence and limits",
+    "AI assistance"
+  ],
+  "architecture": "docs/architecture.md",
+  "evidence": "docs/evidence.md",
+  "demo": "docs/demo.md",
+  "claims": [
+    {
+      "id": "autovant-publication-scope",
+      "text": "This repository publishes portfolio text, architecture diagrams, and screenshots; it does not include the private product applications.",
+      "status": "verified",
+      "evidence": [
+        {
+          "ref": "README.md",
+          "class": "source-inventory",
+          "scope": "The README identifies this repository as portfolio material and says product source is private."
+        },
+        {
+          "ref": "LICENSE.md",
+          "class": "source-inventory",
+          "scope": "The rights notice describes the repository as professional portfolio text, diagrams, and presentation material."
+        },
+        {
+          "ref": "assets/diagrams/build.py",
+          "class": "source",
+          "scope": "The only tracked Python program generates SVG diagrams for the publication."
+        }
+      ],
+      "proof_limit": "This describes the tracked profile repository at the source base; it makes no claim about the separate private product repositories."
+    },
+    {
+      "id": "autovant-career-impact",
+      "text": "Career impact since 2018: $1.5M+ saved · 20,000+ hours saved · 300+ end-to-end automation solutions · 8 years in enterprise automation",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "README.md",
+          "class": "secondary",
+          "scope": "These figures are published in the profile headline."
+        }
+      ],
+      "proof_limit": "This repository includes no employer records or calculation that independently reproduces the career totals."
+    },
+    {
+      "id": "autovant-conductor-tests",
+      "text": "2,764 Python and 231 UI tests · 19 ADRs",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/conductor.md",
+          "class": "secondary",
+          "scope": "The case study publishes these counts with a checked date of 2026-10-16."
+        },
+        {
+          "ref": "assets/screens/conductor/case-evidence-light.png",
+          "class": "artifact",
+          "scope": "The image supports a synthetic UI walkthrough, not the test counts."
+        }
+      ],
+      "proof_limit": "No source SHA, test output, or ADR inventory is bundled in this profile repository."
+    },
+    {
+      "id": "autovant-graphforge-tests",
+      "text": "18-case live evaluation · 428 backend and 38 browser tests",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/graphforge.md",
+          "class": "secondary",
+          "scope": "The case study records these figures with a checked date of 2026-10-16."
+        },
+        {
+          "ref": "assets/screens/graphforge/graphforge-human-interrupt.png",
+          "class": "artifact",
+          "scope": "The screenshot illustrates a human-interrupt state with synthetic incident data."
+        }
+      ],
+      "proof_limit": "No matching test receipt or source SHA is included; the current source main reports a different test collection and is documented separately below."
+    },
+    {
+      "id": "autovant-mandate-guard-benchmark",
+      "text": "384 determinations, 0 differences over 5 runs · 172 tests",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/mandate-guard.md",
+          "class": "secondary",
+          "scope": "The case study records the figures with a checked date of 2026-10-16."
+        },
+        {
+          "ref": "assets/screens/mandate-guard/interpretation-evidence.png",
+          "class": "artifact",
+          "scope": "The screenshot shows synthetic source-linked review material, not the benchmark run."
+        }
+      ],
+      "proof_limit": "The case study does not pin the product source revision or include the test output and benchmark inputs."
+    },
+    {
+      "id": "autovant-redactor-tests",
+      "text": "417 Python tests · packaged app run end to end",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/redactor.md",
+          "class": "secondary",
+          "scope": "The case study publishes this checked-date result."
+        },
+        {
+          "ref": "assets/screens/redactor/redactor-review-light.png",
+          "class": "artifact",
+          "scope": "The screenshot shows a synthetic review UI, not a packaged-app run receipt."
+        }
+      ],
+      "proof_limit": "No source SHA, test log, or package execution record is included here."
+    },
+    {
+      "id": "autovant-relay-tests",
+      "text": "120 unit and 9 Playwright UI tests",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/relay.md",
+          "class": "secondary",
+          "scope": "The case study records these counts with a checked date of 2026-10-16."
+        },
+        {
+          "ref": "assets/screens/relay/relay-privacy-light.png",
+          "class": "artifact",
+          "scope": "The screenshot was captured with sample data and a test-harness backend."
+        }
+      ],
+      "proof_limit": "The same case study says Rust tests were not rerun that day; no source SHA or test output is bundled."
+    },
+    {
+      "id": "autovant-enterprise-automation-tests",
+      "text": "31 review rules · 163 and 406 passing tests",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/enterprise-automation.md",
+          "class": "secondary",
+          "scope": "The case study records these figures across three related private tools with a checked date of 2026-10-16."
+        },
+        {
+          "ref": "assets/screens/enterprise/openvantage-review-station-light.png",
+          "class": "artifact",
+          "scope": "The screenshot shows a synthetic sample invoice, not test evidence."
+        }
+      ],
+      "proof_limit": "The case study explicitly says these are not one deployed customer platform; source revisions and test receipts are not included."
+    },
+    {
+      "id": "autovant-public-superpowers",
+      "text": "It ships the 14 upstream skills, four Copilot prompt files, PowerShell and Bash installers, with a 9-check repository test suite.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "README.md",
+          "class": "secondary",
+          "scope": "The README links the public repository and publishes its summarized contents."
+        }
+      ],
+      "proof_limit": "The target repository's source revision and test output are not pinned in this profile."
+    },
+    {
+      "id": "autovant-synthetic-case-study-captions",
+      "text": "Case-study captions label example records as synthetic or sample data.",
+      "status": "verified",
+      "evidence": [
+        {
+          "ref": "case-studies/conductor.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies synthetic seed data."
+        },
+        {
+          "ref": "case-studies/graphforge.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies synthetic incident data."
+        },
+        {
+          "ref": "case-studies/relay.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies sample data and a test-harness backend."
+        },
+        {
+          "ref": "case-studies/mandate-guard.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies a synthetic agreement and waiver."
+        },
+        {
+          "ref": "case-studies/redactor.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies synthetic files."
+        },
+        {
+          "ref": "case-studies/enterprise-automation.md",
+          "class": "source",
+          "scope": "The screenshot caption identifies a synthetic sample invoice."
+        }
+      ],
+      "proof_limit": "This verifies the published captions, not the provenance of every pixel in every image."
+    },
+    {
+      "id": "autovant-conductor-control-boundary",
+      "text": "Case operations from intake to governed action: assistance advises, deterministic workers act, people decide.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/conductor.md",
+          "class": "secondary",
+          "scope": "The case study and architecture diagram describe separate advisory and action paths."
+        },
+        {
+          "ref": "assets/diagrams/conductor-light.svg",
+          "class": "artifact",
+          "scope": "The diagram presents the described flow but is not a runtime trace."
+        }
+      ],
+      "proof_limit": "Private source and a revision-bound execution trace are not present in this publication repository."
+    },
+    {
+      "id": "autovant-mandate-control-boundary",
+      "text": "Mandate Guard places the model outside the investment decision function; deterministic code evaluates the predicate and a person reviews the result.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/mandate-guard.md",
+          "class": "secondary",
+          "scope": "The architecture text and diagram describe the separation."
+        },
+        {
+          "ref": "assets/diagrams/mandate-guard-light.svg",
+          "class": "artifact",
+          "scope": "The diagram is an explanatory artifact, not execution evidence."
+        }
+      ],
+      "proof_limit": "No product source revision or live decision trace is bound to this case study."
+    },
+    {
+      "id": "autovant-redactor-hard-offline",
+      "text": "Hard-offline de-identification: every file is protected or refused, never passed through.",
+      "status": "unverified",
+      "evidence": [
+        {
+          "ref": "case-studies/redactor.md",
+          "class": "secondary",
+          "scope": "The case study states this safety property and describes release evidence."
+        },
+        {
+          "ref": "assets/diagrams/redactor-light.svg",
+          "class": "artifact",
+          "scope": "The diagram documents the intended assurance, transform, and refusal flow."
+        }
+      ],
+      "proof_limit": "This profile repository contains no packet capture, source revision, or fresh refusal/egress test, so the hard-offline guarantee is not independently qualified here."
+    },
+    {
+      "id": "autovant-relay-offline-gate",
+      "text": "The Relay case study says a test blocks a cloud provider before any socket opens.",
+      "status": "partially_verified",
+      "evidence": [
+        {
+          "ref": "case-studies/relay.md",
+          "class": "secondary",
+          "scope": "The dated case study records the test claim and separately says the UI capture used a test-harness backend."
+        },
+        {
+          "ref": "assets/diagrams/relay-light.svg",
+          "class": "artifact",
+          "scope": "The diagram describes the offline gate and provider route."
+        }
+      ],
+      "proof_limit": "The test source, output, and product revision are not included; this does not qualify live network behavior."
+    }
+  ],
+  "limitations": [
+    "This repository has no runnable product app, application tests, or local test command.",
+    "Most case studies do not identify the source repository commit that produced the dated results.",
+    "Private product source and test receipts are not included; public profile copy and screenshots are not primary verification.",
+    "The GraphForge and Mandate Guard test counts differ from the current source default branch records inspected on 2026-10-25; preserve the dated profile claims and do not silently rewrite them.",
+    "The career impact numbers are not independently reproducible from this repository.",
+    "Case-study screenshots are synthetic or sample demonstrations and do not prove production, customer, provider, or live-system behavior."
+  ]
+}
