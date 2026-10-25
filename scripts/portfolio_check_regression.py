@@ -419,6 +419,24 @@ def main() -> int:
             + target_row
             + "\n"
         )
+        ledger_header_row = next(line for line in evidence_source.splitlines() if line.startswith("| Claim ID |"))
+        ledger_table_lines: list[str] = []
+        in_ledger_table = False
+        for line in evidence_source.splitlines():
+            if not in_ledger_table and line == ledger_header_row:
+                in_ledger_table = True
+            if in_ledger_table:
+                if not line.strip() or "|" not in line:
+                    break
+                ledger_table_lines.append(line)
+        empty_canonical_ledger = evidence_source
+        for claim in manifest_source["claims"]:
+            empty_canonical_ledger = remove_ledger_row(empty_canonical_ledger, claim["id"])
+        exact_header_decoy = (
+            "# Unrelated fixture examples\n\n"
+            + "\n".join(ledger_table_lines) + "\n\n"
+            + empty_canonical_ledger
+        )
         duplicate_manifest = deepcopy(manifest_source)
         duplicate_manifest["claims"].append(deepcopy(duplicate_manifest["claims"][career_index]))
         cases = [
@@ -478,6 +496,18 @@ def main() -> int:
                 "unrelated table row cannot substitute for the ledger row",
                 deepcopy(manifest_source),
                 unrelated_substitute,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "escaped pipe in ledger cell accepted",
+                deepcopy(manifest_source),
+                change_ledger_cell(evidence_source, 4, "Regression fixture contains \\| a literal pipe."),
+                None,
+            ),
+            (
+                "exact-header table before the ledger section cannot substitute for a row",
+                deepcopy(manifest_source),
+                exact_header_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
         ]

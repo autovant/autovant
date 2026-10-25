@@ -150,8 +150,29 @@ def main() -> int:
     ledger_header = [
         "Claim ID", "Exact published claim", "Status", "Evidence references", "Evidence and limit",
     ]
+
+    def ledger_cells(line: str) -> list[str]:
+        text = line.strip()
+        if text.startswith("|"):
+            text = text[1:]
+        if text.endswith("|"):
+            text = text[:-1]
+        cells: list[str] = []
+        cell: list[str] = []
+        escaped = False
+        for character in text:
+            if character == "|" and not escaped:
+                cells.append("".join(cell).strip().replace("\\|", "|"))
+                cell = []
+            else:
+                cell.append(character)
+            escaped = character == "\\" and not escaped
+        cells.append("".join(cell).strip().replace("\\|", "|"))
+        return cells
+
     ledger_rows: dict[str, list[list[str]]] = {}
     fence: tuple[str, int] | None = None
+    in_ledger_section = False
     header_found = False
     table_started = False
     for line in evidence_doc.splitlines():
@@ -168,11 +189,17 @@ def main() -> int:
             continue
         if fence is not None:
             continue
+        if not in_ledger_section:
+            if re.fullmatch(r"#\s+Evidence ledger\s*#*", stripped):
+                in_ledger_section = True
+            continue
+        if re.match(r"^#\s", stripped):
+            break
         if not stripped:
             if table_started:
                 break
             continue
-        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        cells = ledger_cells(stripped)
         if not header_found:
             if cells == ledger_header:
                 header_found = True
