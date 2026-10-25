@@ -295,18 +295,38 @@ def main() -> int:
     evidence_source = (root / manifest_source["evidence"]).read_text(encoding="utf-8")
     claim_id = "autovant-career-impact"
 
-    def change_ledger_cell(text: str, column: int, value: str) -> str:
+    def ledger_cells(line: str) -> list[str]:
+        text = line.strip()
+        if text.startswith("|"):
+            text = text[1:]
+        if text.endswith("|"):
+            text = text[:-1]
+        cells: list[str] = []
+        cell: list[str] = []
+        escaped = False
+        for character in text:
+            if character == "|" and not escaped:
+                cells.append("".join(cell).strip().replace("\\|", "|"))
+                cell = []
+            else:
+                cell.append(character)
+            escaped = character == "\\" and not escaped
+        cells.append("".join(cell).strip().replace("\\|", "|"))
+        return cells
+
+    def change_ledger_cells(text: str, changes: dict[int, str]) -> str:
         lines = text.splitlines()
         for index, line in enumerate(lines):
-            if line.startswith(f"| {claim_id} |"):
-                cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-                cells[column] = value
-                lines[index] = "| " + " | ".join(cells) + " |"
+            if ledger_cells(line)[0] == claim_id:
+                cells = ledger_cells(line)
+                for column, value in changes.items():
+                    cells[column] = value
+                lines[index] = "| " + " | ".join(cell.replace("|", "\\|") for cell in cells) + " |"
                 return "\n".join(lines) + "\n"
         raise ValueError(f"missing ledger row: {claim_id}")
 
-    def ledger_cells(line: str) -> list[str]:
-        return [cell.strip() for cell in line.strip().strip("|").split("|")]
+    def change_ledger_cell(text: str, column: int, value: str) -> str:
+        return change_ledger_cells(text, {column: value})
 
     def find_ledger_row(text: str, target_id: str) -> str:
         for line in text.splitlines():
@@ -372,7 +392,13 @@ def main() -> int:
             return 1
         print("PASS: boolean schema_version rejected")
 
-        def run_case(label: str, manifest_data: dict, evidence_text: str, expected: str | None) -> bool:
+        def run_case(
+            label: str,
+            manifest_data: dict,
+            evidence_text: str,
+            expected: str | None,
+            forbidden: tuple[str, ...] = (),
+        ) -> bool:
             manifest_data["evidence"] = evidence_ref
             temp_manifest.write_text(json.dumps(manifest_data), encoding="utf-8")
             temp_evidence.write_text(evidence_text, encoding="utf-8")
@@ -392,7 +418,7 @@ def main() -> int:
                 )
             else:
                 valid = result.returncode == 1 and expected in output
-            if not valid or "Traceback" in output:
+            if not valid or any(marker in output for marker in forbidden) or "Traceback" in output:
                 print(f"FAIL: {label}")
                 print(f"exit={result.returncode}\n{output}", end="")
                 return False
@@ -439,6 +465,28 @@ def main() -> int:
         )
         duplicate_manifest = deepcopy(manifest_source)
         duplicate_manifest["claims"].append(deepcopy(duplicate_manifest["claims"][career_index]))
+        def missing_evidence_case(extension: str, escaped_pipe_before_path: bool = False) -> tuple[dict, str]:
+            manifest = deepcopy(manifest_source)
+            claim = manifest["claims"][career_index]
+            claim["evidence"][0]["ref"] = f"scripts/missing-evidence{extension}"
+            changes = {3: "; ".join(reference["ref"] for reference in claim["evidence"])}
+            if escaped_pipe_before_path:
+                claim["text"] += " | escaped-pipe path fixture"
+                changes[1] = claim["text"]
+            return manifest, change_ledger_cells(evidence_source, changes)
+
+        missing_ps_manifest, missing_ps_evidence = missing_evidence_case(".ps1")
+        missing_xml_manifest, missing_xml_evidence = missing_evidence_case(".xml")
+        missing_exe_manifest, missing_exe_evidence = missing_evidence_case(".exe")
+        missing_zip_manifest, missing_zip_evidence = missing_evidence_case(".zip")
+        missing_exe_pipe_manifest, missing_exe_pipe_evidence = missing_evidence_case(
+            ".exe", escaped_pipe_before_path=True
+        )
+        missing_path_forbidden = (
+            f"{claim_id}: evidence ledger must contain exactly one claim row",
+            f"{claim_id}: evidence ledger claim text does not match the manifest",
+            f"{claim_id}: evidence ledger references do not match the manifest",
+        )
         cases = [
             (
                 "same-row status mismatch rejected",
@@ -501,7 +549,7 @@ def main() -> int:
             (
                 "escaped pipe in ledger cell accepted",
                 deepcopy(manifest_source),
-                change_ledger_cell(evidence_source, 4, "Regression fixture contains \\| a literal pipe."),
+                change_ledger_cell(evidence_source, 4, "Regression fixture contains | a literal pipe."),
                 None,
             ),
             (
@@ -510,11 +558,48 @@ def main() -> int:
                 exact_header_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
+            (
+                "missing PowerShell evidence path rejected",
+                missing_ps_manifest,
+                missing_ps_evidence,
+                f"{claim_id} evidence: file does not exist: scripts/missing-evidence.ps1",
+                missing_path_forbidden,
+            ),
+            (
+                "missing XML evidence path rejected",
+                missing_xml_manifest,
+                missing_xml_evidence,
+                f"{claim_id} evidence: file does not exist: scripts/missing-evidence.xml",
+                missing_path_forbidden,
+            ),
+            (
+                "missing executable evidence path rejected",
+                missing_exe_manifest,
+                missing_exe_evidence,
+                f"{claim_id} evidence: file does not exist: scripts/missing-evidence.exe",
+                missing_path_forbidden,
+            ),
+            (
+                "missing archive evidence path rejected",
+                missing_zip_manifest,
+                missing_zip_evidence,
+                f"{claim_id} evidence: file does not exist: scripts/missing-evidence.zip",
+                missing_path_forbidden,
+            ),
+            (
+                "escaped pipe before missing evidence path is parsed",
+                missing_exe_pipe_manifest,
+                missing_exe_pipe_evidence,
+                f"{claim_id} evidence: file does not exist: scripts/missing-evidence.exe",
+                missing_path_forbidden,
+            ),
         ]
         cases[1][1]["claims"][career_index]["text"] += " (changed)"
         cases[2][1]["claims"][career_index]["evidence"][0]["ref"] = "LICENSE.md"
-        for label, manifest_data, evidence_text, expected in cases:
-            if not run_case(label, manifest_data, evidence_text, expected):
+        for case in cases:
+            label, manifest_data, evidence_text, expected = case[:4]
+            forbidden = case[4] if len(case) == 5 else ()
+            if not run_case(label, manifest_data, evidence_text, expected, forbidden):
                 return 1
         if not run_case(
             "valid all-unwrapped GFM ledger accepted",
