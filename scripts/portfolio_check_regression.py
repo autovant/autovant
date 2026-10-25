@@ -270,6 +270,12 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "raw HTML block heading cannot satisfy a required section",
+            "<div hidden>\n## Fixture section\n</div>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "H3 README heading cannot satisfy a required H2 section",
             "### Fixture section\n",
             ["Fixture section"],

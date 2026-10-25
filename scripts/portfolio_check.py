@@ -16,6 +16,10 @@ PLACEHOLDER = re.compile(
 MACHINE_PATH = re.compile(r"(?i)(?:\b[a-z]:[\\/]|/(?:users|home|root)/|/mnt/c/)")
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HTML = re.compile(r"\b(src|srcset)\s*=\s*['\"]([^'\"]+)['\"]", re.I)
+RAW_HTML_BLOCK_START = re.compile(
+    r"^ {0,3}<(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?=[ \t/>])",
+    re.I,
+)
 
 
 def main() -> int:
@@ -242,8 +246,13 @@ def main() -> int:
     if readme and readme_sections is not None:
         visible_headings: set[str] = set()
         in_readme_comment = False
+        in_readme_html_block = False
         readme_fence: tuple[str, int] | None = None
         for raw_line in readme_text.splitlines():
+            if in_readme_html_block:
+                if not raw_line.strip():
+                    in_readme_html_block = False
+                continue
             if readme_fence is not None:
                 close_match = re.match(r"^ {0,3}(`{3,}|~{3,})[ \t]*$", raw_line)
                 if (
@@ -260,7 +269,12 @@ def main() -> int:
                     continue
             comment_was_open = in_readme_comment
             visible, in_readme_comment = strip_html_comments(raw_line, in_readme_comment)
-            if comment_was_open or not re.match(r"^ {0,3}##[ \t]+", raw_line):
+            if comment_was_open:
+                continue
+            if RAW_HTML_BLOCK_START.match(raw_line):
+                in_readme_html_block = True
+                continue
+            if not re.match(r"^ {0,3}##[ \t]+", raw_line):
                 continue
             heading = re.match(r"^ {0,3}##[ \t]+(.+?)(?:[ \t]+#+)?[ \t]*$", visible)
             if heading and heading.group(1).strip():
