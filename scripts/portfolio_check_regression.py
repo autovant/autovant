@@ -473,6 +473,11 @@ def main() -> int:
             + "\n".join(ledger_table_lines) + "\n\n"
             + empty_canonical_ledger
         )
+        commented_ledger_decoy = (
+            "<!--\n# Evidence ledger\n\n"
+            + "\n".join(ledger_table_lines)
+            + "\n-->\n"
+        )
         indented_table = "\n".join("    " + line for line in ledger_table_lines)
         empty_lines = empty_canonical_ledger.splitlines()
         canonical_header_index = empty_lines.index(ledger_header_row)
@@ -598,6 +603,12 @@ def main() -> int:
                 "indented code table cannot substitute for the ledger table",
                 deepcopy(manifest_source),
                 indented_code_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "commented heading and table cannot substitute for the ledger",
+                deepcopy(manifest_source),
+                commented_ledger_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
             (

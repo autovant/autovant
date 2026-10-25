@@ -170,14 +170,39 @@ def main() -> int:
         cells.append("".join(cell).strip().replace("\\|", "|"))
         return cells
 
+    def strip_html_comments(line: str, in_comment: bool) -> tuple[str, bool]:
+        visible: list[str] = []
+        cursor = 0
+        while cursor < len(line):
+            if in_comment:
+                closing = line.find("-->", cursor)
+                if closing < 0:
+                    return "".join(visible), True
+                cursor = closing + 3
+                in_comment = False
+                continue
+            opening = line.find("<!--", cursor)
+            if opening < 0:
+                visible.append(line[cursor:])
+                return "".join(visible), False
+            visible.append(line[cursor:opening])
+            cursor = opening + 4
+            in_comment = True
+        return "".join(visible), in_comment
+
     ledger_rows: dict[str, list[list[str]]] = {}
     fence: tuple[str, int] | None = None
+    in_html_comment = False
     in_ledger_section = False
     header_found = False
     table_started = False
     table_ended = False
     ledger_width = len(ledger_header)
-    for line in evidence_doc.splitlines():
+    for raw_line in evidence_doc.splitlines():
+        if fence is None:
+            line, in_html_comment = strip_html_comments(raw_line, in_html_comment)
+        else:
+            line = raw_line
         if line.startswith("    ") or line.startswith("\t"):
             continue
         stripped = line.strip()
