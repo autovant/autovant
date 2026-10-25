@@ -125,7 +125,7 @@ def make_index_fixture(root: Path, checker_source: Path) -> Path:
         "# Evidence ledger\n\n"
         "| Claim ID | Exact published claim | Status | Evidence references | Evidence and limit |\n"
         "|---|---|---|---|---|\n"
-        "| index-fixture | A synthetic fixture claim. | partially_verified | README.md | Temporary fixture only. |\n",
+        "| index-fixture | A synthetic fixture claim. | partially_verified | README.md | Temporary fixture only. Proof limit: Temporary checker fixture only. |\n",
         encoding="utf-8",
     )
     manifest = {
@@ -344,6 +344,15 @@ def main() -> int:
                 return "\n".join(lines) + "\n"
         raise ValueError(f"missing ledger row: {after_id}")
 
+    def insert_ledger_rows_after(text: str, after_id: str, rows: list[str]) -> str:
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            cells = ledger_cells(line)
+            if len(cells) == 5 and cells[0] == after_id:
+                lines[index + 1:index + 1] = rows
+                return "\n".join(lines) + "\n"
+        raise ValueError(f"missing ledger row: {after_id}")
+
     def remove_ledger_row(text: str, target_id: str) -> str:
         lines = text.splitlines()
         for index, line in enumerate(lines):
@@ -396,7 +405,7 @@ def main() -> int:
             label: str,
             manifest_data: dict,
             evidence_text: str,
-            expected: str | None,
+            expected: str | tuple[str, ...] | None,
             forbidden: tuple[str, ...] = (),
         ) -> bool:
             manifest_data["evidence"] = evidence_ref
@@ -417,7 +426,8 @@ def main() -> int:
                     and f"WARNING: {claim_id}: status is partially_verified" in output
                 )
             else:
-                valid = result.returncode == 1 and expected in output
+                expected_messages = expected if isinstance(expected, tuple) else (expected,)
+                valid = result.returncode == 1 and all(message in output for message in expected_messages)
             if not valid or any(marker in output for marker in forbidden) or "Traceback" in output:
                 print(f"FAIL: {label}")
                 print(f"exit={result.returncode}\n{output}", end="")
@@ -462,6 +472,27 @@ def main() -> int:
             "# Unrelated fixture examples\n\n"
             + "\n".join(ledger_table_lines) + "\n\n"
             + empty_canonical_ledger
+        )
+        indented_table = "\n".join("    " + line for line in ledger_table_lines)
+        empty_lines = empty_canonical_ledger.splitlines()
+        canonical_header_index = empty_lines.index(ledger_header_row)
+        indented_lines = ["## Unrelated indented code table", "", *indented_table.splitlines(), ""]
+        empty_lines[canonical_header_index:canonical_header_index] = indented_lines
+        indented_code_decoy = "\n".join(empty_lines) + "\n"
+        second_ledger_table = evidence_source.rstrip() + "\n\n" + "\n".join(ledger_table_lines) + "\n"
+        separator_line = next(line for line in evidence_source.splitlines() if line.startswith("|---"))
+        short_separator = evidence_source.replace(separator_line, "|---|---|---|---|", 1)
+        malformed_then_unknown = insert_ledger_rows_after(
+            evidence_source,
+            claim_id,
+            [
+                "| malformed-ledger-row | only | three |",
+                "undeclared-after-malformed | Synthetic undeclared claim. | partially_verified "
+                "| README.md | Regression fixture only.",
+            ],
+        )
+        proof_limit_mismatch = change_ledger_cell(
+            evidence_source, 4, "Regression fixture omits the manifest proof limit."
         )
         duplicate_manifest = deepcopy(manifest_source)
         duplicate_manifest["claims"].append(deepcopy(duplicate_manifest["claims"][career_index]))
@@ -549,7 +580,12 @@ def main() -> int:
             (
                 "escaped pipe in ledger cell accepted",
                 deepcopy(manifest_source),
-                change_ledger_cell(evidence_source, 4, "Regression fixture contains | a literal pipe."),
+                change_ledger_cell(
+                    evidence_source,
+                    4,
+                    "Regression fixture contains | a literal pipe. Proof limit: "
+                    + manifest_source["claims"][career_index]["proof_limit"],
+                ),
                 None,
             ),
             (
@@ -557,6 +593,39 @@ def main() -> int:
                 deepcopy(manifest_source),
                 exact_header_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "indented code table cannot substitute for the ledger table",
+                deepcopy(manifest_source),
+                indented_code_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "second ledger table after a blank is rejected",
+                deepcopy(manifest_source),
+                second_ledger_table,
+                "evidence ledger contains more than one ledger table",
+            ),
+            (
+                "short ledger separator rejected",
+                deepcopy(manifest_source),
+                short_separator,
+                "evidence ledger separator must contain exactly 5 cells",
+            ),
+            (
+                "malformed row does not hide a later undeclared ID",
+                deepcopy(manifest_source),
+                malformed_then_unknown,
+                (
+                    "evidence ledger row must contain exactly 5 cells",
+                    "undeclared-after-malformed: evidence ledger claim ID is not declared in the manifest",
+                ),
+            ),
+            (
+                "ledger proof limit must match the manifest",
+                deepcopy(manifest_source),
+                proof_limit_mismatch,
+                f"{claim_id}: evidence ledger proof limit does not match the manifest",
             ),
             (
                 "missing PowerShell evidence path rejected",
@@ -596,11 +665,14 @@ def main() -> int:
         ]
         cases[1][1]["claims"][career_index]["text"] += " (changed)"
         cases[2][1]["claims"][career_index]["evidence"][0]["ref"] = "LICENSE.md"
+        cases_passed = True
         for case in cases:
             label, manifest_data, evidence_text, expected = case[:4]
             forbidden = case[4] if len(case) == 5 else ()
             if not run_case(label, manifest_data, evidence_text, expected, forbidden):
-                return 1
+                cases_passed = False
+        if not cases_passed:
+            return 1
         if not run_case(
             "valid all-unwrapped GFM ledger accepted",
             deepcopy(manifest_source),

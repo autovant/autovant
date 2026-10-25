@@ -175,14 +175,21 @@ def main() -> int:
     in_ledger_section = False
     header_found = False
     table_started = False
+    table_ended = False
+    ledger_width = len(ledger_header)
     for line in evidence_doc.splitlines():
+        if line.startswith("    ") or line.startswith("\t"):
+            continue
         stripped = line.strip()
         fence_match = re.match(r"^(`{3,}|~{3,})", stripped)
         if fence_match:
             marker = fence_match.group(1)
             if fence is None:
                 if table_started:
-                    break
+                    table_ended = True
+                elif header_found:
+                    fail("evidence ledger header must be followed by a separator row")
+                    table_ended = True
                 fence = (marker[0], len(marker))
             elif marker[0] == fence[0] and len(marker) >= fence[1]:
                 fence = None
@@ -196,24 +203,39 @@ def main() -> int:
         if re.match(r"^#\s", stripped):
             break
         if not stripped:
-            if table_started:
-                break
+            if header_found and not table_started:
+                fail("evidence ledger header must be followed by a separator row")
+                table_ended = True
+            elif table_started:
+                table_ended = True
             continue
         cells = ledger_cells(stripped)
+        if table_ended:
+            if cells == ledger_header:
+                fail("evidence ledger contains more than one ledger table")
+            continue
         if not header_found:
             if cells == ledger_header:
                 header_found = True
             continue
         if not table_started:
-            if len(ledger_header) - 1 <= len(cells) <= len(ledger_header) and all(
-                re.fullmatch(r":?-+:?", cell) for cell in cells
-            ):
+            if all(re.fullmatch(r":?-+:?", cell) for cell in cells):
+                if len(cells) != ledger_width:
+                    fail(f"evidence ledger separator must contain exactly {ledger_width} cells")
                 table_started = True
             else:
-                break
+                fail("evidence ledger header must be followed by a separator row")
+                table_ended = True
             continue
-        if len(cells) != len(ledger_header) or all(re.fullmatch(r":?-+:?", cell) for cell in cells):
-            break
+        if "|" not in stripped:
+            table_ended = True
+            continue
+        if all(re.fullmatch(r":?-+:?", cell) for cell in cells):
+            fail("evidence ledger contains an unexpected separator row")
+            continue
+        if len(cells) != ledger_width:
+            fail(f"evidence ledger row must contain exactly {ledger_width} cells")
+            continue
         ledger_rows.setdefault(cells[0], []).append(cells)
     ids: set[str] = set()
     for claim in claims:
@@ -265,6 +287,9 @@ def main() -> int:
             ]
             if row[3] != "; ".join(expected_refs):
                 fail(f"{claim_id}: evidence ledger references do not match the manifest")
+            proof_limit = claim.get("proof_limit")
+            if isinstance(proof_limit, str) and proof_limit and proof_limit not in row[4]:
+                fail(f"{claim_id}: evidence ledger proof limit does not match the manifest")
         if not isinstance(claim.get("proof_limit"), str) or not claim["proof_limit"].strip():
             fail(f"{claim_id}: proof_limit is required")
     for ledger_id in ledger_rows.keys() - ids:
