@@ -13,7 +13,7 @@ PRIMARY = {"source", "test", "artifact", "source-inventory"}
 PLACEHOLDER = re.compile(
     r"\b(?:TODO|TBD|FIXME|YOUR_NAME|REPLACE_ME)\b|\[(?:add|insert|replace)\b|<your\b", re.I
 )
-MACHINE_PATH = re.compile(r"(?i)(?:\b[a-z]:\\|/(?:users|home|root)/|/mnt/c/)")
+MACHINE_PATH = re.compile(r"(?i)(?:\b[a-z]:[\\/]|/(?:users|home|root)/|/mnt/c/)")
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HTML = re.compile(r"\b(src|srcset)\s*=\s*['\"]([^'\"]+)['\"]", re.I)
 
@@ -90,6 +90,7 @@ def main() -> int:
     elif git("cat-file", "-e", f"{match.group(1)}^{{commit}}") is None:
         fail("source_base commit is absent from the local Git object database")
 
+    local_file("AGENTS.md", "AGENTS")
     readme = local_file("README.md", "README")
     doc_paths = {key: local_file(data.get(key), key) for key in ("architecture", "evidence", "demo")}
     if readme:

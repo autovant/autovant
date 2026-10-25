@@ -2,6 +2,7 @@
 """Focused negative controls for portfolio-checker input boundaries."""
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -43,6 +44,56 @@ def check_collision_control() -> bool:
     return True
 
 
+def run_minimal_fixture(checker_source: Path, readme_text: str, include_agents: bool):
+    with tempfile.TemporaryDirectory(prefix="autovant-portfolio-check-negative-") as temp_root:
+        root = Path(temp_root)
+        scripts_dir = root / "scripts"
+        (root / ".portfolio").mkdir()
+        scripts_dir.mkdir()
+        checker = scripts_dir / "portfolio_check.py"
+        shutil.copyfile(checker_source, checker)
+        (root / ".portfolio/project.yaml").write_text("{}\n", encoding="utf-8")
+        (root / "README.md").write_text(readme_text, encoding="utf-8")
+        if include_agents:
+            (root / "AGENTS.md").write_text("# Disposable checker fixture\n", encoding="utf-8")
+        return subprocess.run(
+            [sys.executable, str(checker)],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+
+
+def check_machine_path_controls(checker: Path) -> bool:
+    for path_text in (
+        "C:/Program Files/Synthetic/private-note.txt",
+        r"C:\Program Files\Synthetic\private-note.txt",
+    ):
+        result = run_minimal_fixture(checker, f"# Fixture\n\n{path_text}\n", include_agents=True)
+        output = result.stdout + result.stderr
+        expected = "README.md: machine-specific absolute path found"
+        if result.returncode != 1 or expected not in output or "Traceback" in output:
+            print(f"FAIL: machine-specific path rejected: {path_text}")
+            print(f"exit={result.returncode}\n{output}", end="")
+            return False
+        print(f"PASS: machine-specific path rejected: {path_text}")
+    return True
+
+
+def check_missing_agents_control(checker: Path) -> bool:
+    result = run_minimal_fixture(checker, "# Fixture\n", include_agents=False)
+    output = result.stdout + result.stderr
+    expected = "AGENTS: file does not exist: AGENTS.md"
+    if result.returncode != 1 or expected not in output or "Traceback" in output:
+        print("FAIL: missing AGENTS.md was not rejected cleanly")
+        print(f"exit={result.returncode}\n{output}", end="")
+        return False
+    print("PASS: missing AGENTS.md rejected without touching the author tree")
+    return True
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     checker = Path(__file__).with_name("portfolio_check.py")
@@ -77,6 +128,10 @@ def main() -> int:
         print("PASS: external manifest rejected with exit 1 and no traceback")
 
     if not check_collision_control():
+        return 1
+    if not check_machine_path_controls(checker):
+        return 1
+    if not check_missing_agents_control(checker):
         return 1
 
     manifest_source = json.loads((root / ".portfolio/project.yaml").read_text(encoding="utf-8"))
