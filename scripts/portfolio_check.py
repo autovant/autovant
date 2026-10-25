@@ -96,15 +96,22 @@ def main() -> int:
     local_file("AGENTS.md", "AGENTS")
     readme = local_file("README.md", "README")
     doc_paths = {key: local_file(data.get(key), key) for key in ("architecture", "evidence", "demo")}
+    configured_readme_sections = data.get("readme_sections")
+    readme_sections: list[str] | None = None
+    if not isinstance(configured_readme_sections, list):
+        fail("readme_sections must be a list")
+    elif not configured_readme_sections:
+        fail("readme_sections must be a non-empty list")
+    else:
+        readme_sections = []
+        for heading in configured_readme_sections:
+            if not isinstance(heading, str) or not heading.strip():
+                fail("readme_sections entries must be non-empty strings")
+            else:
+                readme_sections.append(heading.strip())
+    readme_text = ""
     if readme:
-        sections = data.get("readme_sections")
-        if not isinstance(sections, list):
-            fail("readme_sections must be a list")
-        else:
-            text = readme.read_text(encoding="utf-8")
-            for heading in sections:
-                if not isinstance(heading, str) or f"## {heading}" not in text:
-                    fail(f"README missing required section: {heading}")
+        readme_text = readme.read_text(encoding="utf-8")
 
     commands = data.get("commands")
     if not isinstance(commands, dict):
@@ -231,6 +238,36 @@ def main() -> int:
             cursor = opening + 4
             in_comment = True
         return "".join(visible), in_comment
+
+    if readme and readme_sections is not None:
+        visible_headings: set[str] = set()
+        in_readme_comment = False
+        readme_fence: tuple[str, int] | None = None
+        for raw_line in readme_text.splitlines():
+            if readme_fence is not None:
+                close_match = re.match(r"^ {0,3}(`{3,}|~{3,})[ \t]*$", raw_line)
+                if (
+                    close_match
+                    and close_match.group(1)[0] == readme_fence[0]
+                    and len(close_match.group(1)) >= readme_fence[1]
+                ):
+                    readme_fence = None
+                continue
+            if not in_readme_comment:
+                fence_match = re.match(r"^ {0,3}(`{3,}|~{3,})", raw_line)
+                if fence_match:
+                    readme_fence = (fence_match.group(1)[0], len(fence_match.group(1)))
+                    continue
+            comment_was_open = in_readme_comment
+            visible, in_readme_comment = strip_html_comments(raw_line, in_readme_comment)
+            if comment_was_open or not re.match(r"^ {0,3}##[ \t]+", raw_line):
+                continue
+            heading = re.match(r"^ {0,3}##[ \t]+(.+?)\s*#*\s*$", visible)
+            if heading and heading.group(1).strip():
+                visible_headings.add(heading.group(1).strip())
+        for heading in readme_sections:
+            if heading not in visible_headings:
+                fail(f"README missing required section: {heading}")
 
     ledger_rows: dict[str, list[list[str]]] = {}
     fence: tuple[str, int] | None = None

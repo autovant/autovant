@@ -116,7 +116,7 @@ def make_index_fixture(root: Path, checker_source: Path) -> Path:
     checker = root / "scripts/portfolio_check.py"
     shutil.copyfile(checker_source, checker)
 
-    readme_text = "# Index probe fixture\n\nA synthetic fixture claim.\n"
+    readme_text = "## Fixture section\n\nA synthetic fixture claim.\n"
     (root / "README.md").write_text(readme_text, encoding="utf-8")
     (root / "AGENTS.md").write_text("# Disposable checker fixture\n", encoding="utf-8")
     (root / "docs/architecture.md").write_text("# Architecture\n", encoding="utf-8")
@@ -145,7 +145,7 @@ def make_index_fixture(root: Path, checker_source: Path) -> Path:
             "demo_status": "No runnable demo in this fixture.",
             "demo_instructions": "docs/demo.md",
         },
-        "readme_sections": [],
+        "readme_sections": ["Fixture section"],
         "architecture": "docs/architecture.md",
         "evidence": "docs/evidence.md",
         "demo": "docs/demo.md",
@@ -233,7 +233,7 @@ def check_read_only_git_control(checker_source: Path) -> bool:
                 or "Traceback" in output
                 or candidate_before != candidate_after
                 or (candidate / "README.md").read_text(encoding="utf-8")
-                != "# Index probe fixture\n\nA synthetic fixture claim.\n"
+                != "## Fixture section\n\nA synthetic fixture claim.\n"
             ):
                 print("FAIL: default checker refreshed the index or failed its disposable fixture")
                 print(f"exit={result.returncode}\nindex_before={candidate_before}\nindex_after={candidate_after}\n{output}")
@@ -247,6 +247,75 @@ def check_read_only_git_control(checker_source: Path) -> bool:
         f"{candidate_before[:12]} (plain git status refreshed {control_before[:12]} to {control_after[:12]})"
     )
     return True
+
+
+def check_readme_section_controls(checker_source: Path) -> bool:
+    cases = (
+        (
+            "visible H2 README section accepted",
+            "## Fixture section\n",
+            ["Fixture section"],
+            None,
+        ),
+        (
+            "fenced README heading cannot satisfy a required section",
+            "```markdown\n## Fixture section\n```\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "commented README heading cannot satisfy a required section",
+            "<!--\n## Fixture section\n-->\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "H3 README heading cannot satisfy a required H2 section",
+            "### Fixture section\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "empty README section list is rejected",
+            "## Fixture section\n",
+            [],
+            "readme_sections must be a non-empty list",
+        ),
+    )
+    all_passed = True
+    try:
+        for label, readme_text, sections, expected_error in cases:
+            with tempfile.TemporaryDirectory(prefix="autovant-readme-sections-") as temp_root:
+                root = Path(temp_root)
+                checker = make_index_fixture(root, checker_source)
+                manifest_path = root / ".portfolio/project.yaml"
+                manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                manifest["readme_sections"] = sections
+                manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+                (root / "README.md").write_text(readme_text, encoding="utf-8")
+                result = subprocess.run(
+                    [sys.executable, str(checker)],
+                    cwd=root,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    check=False,
+                )
+                output = result.stdout + result.stderr
+                if expected_error is None:
+                    valid = result.returncode == 0 and "PORTFOLIO CHECK: READY" in output
+                else:
+                    valid = result.returncode == 1 and expected_error in output
+                if not valid or "Traceback" in output:
+                    print(f"FAIL: {label}")
+                    print(f"exit={result.returncode}\n{output}", end="")
+                    all_passed = False
+                else:
+                    print(f"PASS: {label}")
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        print(f"FAIL: README section fixture: {exc}")
+        return False
+    return all_passed
 
 
 def main() -> int:
@@ -289,6 +358,8 @@ def main() -> int:
     if not check_missing_agents_control(checker):
         return 1
     if not check_read_only_git_control(checker):
+        return 1
+    if not check_readme_section_controls(checker):
         return 1
 
     manifest_source = json.loads((root / ".portfolio/project.yaml").read_text(encoding="utf-8"))
