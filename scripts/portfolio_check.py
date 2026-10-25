@@ -147,15 +147,47 @@ def main() -> int:
         fail("claims must be a non-empty list")
         claims = []
     evidence_doc = doc_paths["evidence"].read_text(encoding="utf-8") if doc_paths["evidence"] else ""
+    ledger_header = [
+        "Claim ID", "Exact published claim", "Status", "Evidence references", "Evidence and limit",
+    ]
     ledger_rows: dict[str, list[list[str]]] = {}
+    fence: tuple[str, int] | None = None
+    header_found = False
+    table_started = False
     for line in evidence_doc.splitlines():
-        if not line.strip().startswith("|"):
+        stripped = line.strip()
+        fence_match = re.match(r"^(`{3,}|~{3,})", stripped)
+        if fence_match:
+            marker = fence_match.group(1)
+            if fence is None:
+                if table_started:
+                    break
+                fence = (marker[0], len(marker))
+            elif marker[0] == fence[0] and len(marker) >= fence[1]:
+                fence = None
             continue
-        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
-        if len(cells) == 5 and cells[0] != "Claim ID":
-            if all(re.fullmatch(r":?-+:?", cell) for cell in cells):
-                continue
-            ledger_rows.setdefault(cells[0], []).append(cells)
+        if fence is not None:
+            continue
+        if not stripped:
+            if table_started:
+                break
+            continue
+        cells = [cell.strip() for cell in stripped.strip("|").split("|")]
+        if not header_found:
+            if cells == ledger_header:
+                header_found = True
+            continue
+        if not table_started:
+            if len(ledger_header) - 1 <= len(cells) <= len(ledger_header) and all(
+                re.fullmatch(r":?-+:?", cell) for cell in cells
+            ):
+                table_started = True
+            else:
+                break
+            continue
+        if len(cells) != len(ledger_header) or all(re.fullmatch(r":?-+:?", cell) for cell in cells):
+            break
+        ledger_rows.setdefault(cells[0], []).append(cells)
     ids: set[str] = set()
     for claim in claims:
         if not isinstance(claim, dict):

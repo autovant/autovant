@@ -305,6 +305,49 @@ def main() -> int:
                 return "\n".join(lines) + "\n"
         raise ValueError(f"missing ledger row: {claim_id}")
 
+    def ledger_cells(line: str) -> list[str]:
+        return [cell.strip() for cell in line.strip().strip("|").split("|")]
+
+    def find_ledger_row(text: str, target_id: str) -> str:
+        for line in text.splitlines():
+            cells = ledger_cells(line)
+            if len(cells) == 5 and cells[0] == target_id:
+                return line
+        raise ValueError(f"missing ledger row: {target_id}")
+
+    def insert_ledger_row(text: str, after_id: str, row: str) -> str:
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            cells = ledger_cells(line)
+            if len(cells) == 5 and cells[0] == after_id:
+                lines.insert(index + 1, row)
+                return "\n".join(lines) + "\n"
+        raise ValueError(f"missing ledger row: {after_id}")
+
+    def remove_ledger_row(text: str, target_id: str) -> str:
+        lines = text.splitlines()
+        for index, line in enumerate(lines):
+            cells = ledger_cells(line)
+            if len(cells) == 5 and cells[0] == target_id:
+                del lines[index]
+                return "\n".join(lines) + "\n"
+        raise ValueError(f"missing ledger row: {target_id}")
+
+    def remove_outer_pipes_from_ledger(text: str) -> str:
+        lines = text.splitlines()
+        in_ledger = False
+        for index, line in enumerate(lines):
+            stripped = line.strip()
+            if not in_ledger:
+                cells = ledger_cells(line)
+                if len(cells) == 5 and cells[0] == "Claim ID":
+                    in_ledger = True
+            if in_ledger:
+                if not stripped or "|" not in stripped:
+                    break
+                lines[index] = stripped.strip("|").strip()
+        return "\n".join(lines) + "\n"
+
     with fixture_directory(root) as fixture_path:
         fixture = Path(fixture_path)
         temp_manifest = fixture / "manifest.json"
@@ -329,7 +372,7 @@ def main() -> int:
             return 1
         print("PASS: boolean schema_version rejected")
 
-        def run_case(label: str, manifest_data: dict, evidence_text: str, expected: str) -> bool:
+        def run_case(label: str, manifest_data: dict, evidence_text: str, expected: str | None) -> bool:
             manifest_data["evidence"] = evidence_ref
             temp_manifest.write_text(json.dumps(manifest_data), encoding="utf-8")
             temp_evidence.write_text(evidence_text, encoding="utf-8")
@@ -342,7 +385,14 @@ def main() -> int:
                 check=False,
             )
             output = result.stdout + result.stderr
-            if result.returncode != 1 or expected not in output or "Traceback" in output:
+            if expected is None:
+                valid = (
+                    result.returncode == 0
+                    and f"WARNING: {claim_id}: status is partially_verified" in output
+                )
+            else:
+                valid = result.returncode == 1 and expected in output
+            if not valid or "Traceback" in output:
                 print(f"FAIL: {label}")
                 print(f"exit={result.returncode}\n{output}", end="")
                 return False
@@ -350,6 +400,27 @@ def main() -> int:
             return True
 
         career_index = next(i for i, claim in enumerate(manifest_source["claims"]) if claim["id"] == claim_id)
+        target_row = find_ledger_row(evidence_source, claim_id)
+        unwrapped_target_row = target_row.strip().strip("|").strip()
+        unknown_claim_row = (
+            "undeclared-ledger-claim | Synthetic undeclared claim. | partially_verified "
+            "| README.md | Regression fixture only."
+        )
+        missing_claim_evidence = remove_ledger_row(evidence_source, claim_id)
+        fenced_substitute = (
+            missing_claim_evidence.rstrip()
+            + f"\n\n```markdown\n{target_row}\n```\n"
+        )
+        unrelated_substitute = (
+            missing_claim_evidence.rstrip()
+            + "\n\n## Unrelated fixture table\n\n"
+            + "| Claim ID | Example claim | Status | References | Limit |\n"
+            + "| --- | --- | --- | --- | --- |\n"
+            + target_row
+            + "\n"
+        )
+        duplicate_manifest = deepcopy(manifest_source)
+        duplicate_manifest["claims"].append(deepcopy(duplicate_manifest["claims"][career_index]))
         cases = [
             (
                 "same-row status mismatch rejected",
@@ -372,23 +443,56 @@ def main() -> int:
             (
                 "undeclared ledger claim ID rejected",
                 deepcopy(manifest_source),
-                evidence_source.rstrip()
-                + "\n| undeclared-ledger-claim | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |\n",
+                insert_ledger_row(
+                    evidence_source,
+                    claim_id,
+                    "| undeclared-ledger-claim | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |",
+                ),
                 "undeclared-ledger-claim: evidence ledger claim ID is not declared in the manifest",
             ),
             (
-                "duplicate declared claim ID rejected",
+                "unwrapped undeclared ledger claim ID rejected",
                 deepcopy(manifest_source),
+                insert_ledger_row(evidence_source, claim_id, unknown_claim_row),
+                "undeclared-ledger-claim: evidence ledger claim ID is not declared in the manifest",
+            ),
+            (
+                "duplicate evidence ledger row rejected",
+                deepcopy(manifest_source),
+                insert_ledger_row(evidence_source, claim_id, unwrapped_target_row),
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "duplicate declared claim ID rejected",
+                duplicate_manifest,
                 evidence_source,
                 f"duplicate claim id: {claim_id}",
+            ),
+            (
+                "fenced row cannot substitute for the ledger row",
+                deepcopy(manifest_source),
+                fenced_substitute,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "unrelated table row cannot substitute for the ledger row",
+                deepcopy(manifest_source),
+                unrelated_substitute,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
         ]
         cases[1][1]["claims"][career_index]["text"] += " (changed)"
         cases[2][1]["claims"][career_index]["evidence"][0]["ref"] = "LICENSE.md"
-        cases[4][1]["claims"].append(deepcopy(cases[4][1]["claims"][career_index]))
         for label, manifest_data, evidence_text, expected in cases:
             if not run_case(label, manifest_data, evidence_text, expected):
                 return 1
+        if not run_case(
+            "valid all-unwrapped GFM ledger accepted",
+            deepcopy(manifest_source),
+            remove_outer_pipes_from_ledger(evidence_source),
+            None,
+        ):
+            return 1
     return 0
 
 
