@@ -13,7 +13,7 @@
     "run": null,
     "run_status": "Not an executable product repository; the tracked files are publication text and assets.",
     "test": null,
-    "test_status": "No application or product test suite is included. The profile checker validates only this publication packet.",
+    "test_status": "No application or product test suite is included. A standalone regression script checks the publication checker only.",
     "demo": null,
     "demo_status": "There is no runnable product demo in this repository; use the static interview walkthrough instructions.",
     "demo_instructions": "docs/demo.md"
@@ -262,7 +262,7 @@
     },
     {
       "id": "autovant-redactor-hard-offline",
-      "text": "Hard-offline de-identification: every file is protected or refused, never passed through.",
+      "text": "The case study describes Redactor as hard-offline: supported files are transformed and unsupported files are refused. This profile does not independently verify that guarantee.",
       "status": "unverified",
       "evidence": [
         {
@@ -276,7 +276,7 @@
           "scope": "The diagram documents the intended assurance, transform, and refusal flow."
         }
       ],
-      "proof_limit": "This profile repository contains no packet capture, source revision, or fresh refusal/egress test, so the hard-offline guarantee is not independently qualified here."
+      "proof_limit": "This profile records the case study's hard-offline design, but no packet capture, source revision, or fresh refusal/egress test independently qualifies the no-pass-through guarantee."
     },
     {
       "id": "autovant-relay-offline-gate",

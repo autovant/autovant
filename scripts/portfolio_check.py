@@ -23,6 +23,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=root / ".portfolio/project.yaml")
     manifest_path = parser.parse_args().manifest.resolve()
+    try:
+        manifest_path.relative_to(root)
+    except ValueError:
+        print("ERROR: manifest path must be inside the repository")
+        print("PORTFOLIO CHECK: BLOCKED - manifest path outside repository")
+        return 1
     errors: list[str] = []
     warnings: list[str] = []
 
