@@ -53,7 +53,10 @@ def main() -> int:
     def git(*args: str) -> str | None:
         try:
             result = subprocess.run(
-                ["git", "-c", "core.untrackedCache=false", "-C", str(root), *args],
+                [
+                    "git", "--no-optional-locks", "-c", "core.untrackedCache=false",
+                    "-C", str(root), *args,
+                ],
                 capture_output=True, text=True,
                 timeout=5, check=False,
             )

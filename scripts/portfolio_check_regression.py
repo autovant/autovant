@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Focused negative controls for portfolio-checker input boundaries."""
 
+import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -94,6 +96,159 @@ def check_missing_agents_control(checker: Path) -> bool:
     return True
 
 
+def run_git(root: Path, *args: str) -> subprocess.CompletedProcess:
+    env = os.environ.copy()
+    env.pop("GIT_OPTIONAL_LOCKS", None)
+    return subprocess.run(
+        ["git", "-c", "core.untrackedCache=false", "-C", str(root), *args],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+
+
+def make_index_fixture(root: Path, checker_source: Path) -> Path:
+    (root / "scripts").mkdir(parents=True)
+    (root / ".portfolio").mkdir()
+    (root / "docs").mkdir()
+    checker = root / "scripts/portfolio_check.py"
+    shutil.copyfile(checker_source, checker)
+
+    readme_text = "# Index probe fixture\n\nA synthetic fixture claim.\n"
+    (root / "README.md").write_text(readme_text, encoding="utf-8")
+    (root / "AGENTS.md").write_text("# Disposable checker fixture\n", encoding="utf-8")
+    (root / "docs/architecture.md").write_text("# Architecture\n", encoding="utf-8")
+    (root / "docs/demo.md").write_text("# Demo\n", encoding="utf-8")
+    (root / "docs/evidence.md").write_text(
+        "# Evidence ledger\n\n"
+        "| Claim ID | Exact published claim | Status | Evidence references | Evidence and limit |\n"
+        "|---|---|---|---|---|\n"
+        "| index-fixture | A synthetic fixture claim. | partially_verified | README.md | Temporary fixture only. |\n",
+        encoding="utf-8",
+    )
+    manifest = {
+        "schema_version": 1,
+        "project": "Index probe fixture",
+        "level": "supporting",
+        "summary": "A disposable checker regression fixture.",
+        "source_base": "origin/main@" + "0" * 40,
+        "revision_scope": "Synthetic files only.",
+        "supported_environment": {"runtime": "Python", "package_manager": "Not applicable"},
+        "commands": {
+            "run": None,
+            "run_status": "No application runtime in this fixture.",
+            "test": None,
+            "test_status": "No application test suite in this fixture.",
+            "demo": None,
+            "demo_status": "No runnable demo in this fixture.",
+            "demo_instructions": "docs/demo.md",
+        },
+        "readme_sections": [],
+        "architecture": "docs/architecture.md",
+        "evidence": "docs/evidence.md",
+        "demo": "docs/demo.md",
+        "claims": [
+            {
+                "id": "index-fixture",
+                "text": "A synthetic fixture claim.",
+                "status": "partially_verified",
+                "evidence": [
+                    {"ref": "README.md", "class": "secondary", "scope": "Disposable fixture."}
+                ],
+                "proof_limit": "Temporary checker fixture only.",
+            }
+        ],
+        "limitations": ["Temporary checker fixture only."],
+    }
+    manifest_path = root / ".portfolio/project.yaml"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    for args in (
+        ("init", "--quiet"),
+        ("config", "user.name", "Portfolio checker regression"),
+        ("config", "user.email", "portfolio-check@example.invalid"),
+        ("add", "--all"),
+        ("commit", "--quiet", "-m", "initial index fixture"),
+    ):
+        result = run_git(root, *args)
+        if result.returncode:
+            raise RuntimeError(result.stdout + result.stderr)
+    base_commit = run_git(root, "rev-parse", "HEAD").stdout.strip()
+    manifest["source_base"] = f"origin/main@{base_commit}"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    for args in (
+        ("add", ".portfolio/project.yaml"),
+        ("commit", "--quiet", "-m", "bind index fixture source"),
+    ):
+        result = run_git(root, *args)
+        if result.returncode:
+            raise RuntimeError(result.stdout + result.stderr)
+
+    os.utime(root / "README.md", (946684800, 946684800))
+    return checker
+
+
+def index_hash(root: Path) -> str:
+    return hashlib.sha256((root / ".git/index").read_bytes()).hexdigest()
+
+
+def check_read_only_git_control(checker_source: Path) -> bool:
+    try:
+        with tempfile.TemporaryDirectory(prefix="autovant-portfolio-index-probe-") as temp_root:
+            root = Path(temp_root)
+            control = root / "control"
+            candidate = root / "candidate"
+            control.mkdir()
+            candidate.mkdir()
+            checker = make_index_fixture(candidate, checker_source)
+            make_index_fixture(control, checker_source)
+
+            control_before = index_hash(control)
+            control_result = run_git(control, "status", "--porcelain")
+            control_after = index_hash(control)
+            if control_result.returncode or control_before == control_after:
+                print("FAIL: stale-stat control did not demonstrate an optional index refresh")
+                print(control_result.stdout + control_result.stderr, end="")
+                return False
+
+            candidate_before = index_hash(candidate)
+            env = os.environ.copy()
+            env.pop("GIT_OPTIONAL_LOCKS", None)
+            result = subprocess.run(
+                [sys.executable, str(checker)],
+                cwd=candidate,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            output = result.stdout + result.stderr
+            candidate_after = index_hash(candidate)
+            if (
+                result.returncode != 0
+                or "PORTFOLIO CHECK: READY WITH WARNINGS" not in output
+                or "Traceback" in output
+                or candidate_before != candidate_after
+                or (candidate / "README.md").read_text(encoding="utf-8")
+                != "# Index probe fixture\n\nA synthetic fixture claim.\n"
+            ):
+                print("FAIL: default checker refreshed the index or failed its disposable fixture")
+                print(f"exit={result.returncode}\nindex_before={candidate_before}\nindex_after={candidate_after}\n{output}")
+                return False
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+        print(f"FAIL: read-only Git index fixture: {exc}")
+        return False
+
+    print(
+        "PASS: default checker preserves stale-stat index "
+        f"{candidate_before[:12]} (plain git status refreshed {control_before[:12]} to {control_after[:12]})"
+    )
+    return True
+
+
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
     checker = Path(__file__).with_name("portfolio_check.py")
@@ -132,6 +287,8 @@ def main() -> int:
     if not check_machine_path_controls(checker):
         return 1
     if not check_missing_agents_control(checker):
+        return 1
+    if not check_read_only_git_control(checker):
         return 1
 
     manifest_source = json.loads((root / ".portfolio/project.yaml").read_text(encoding="utf-8"))
