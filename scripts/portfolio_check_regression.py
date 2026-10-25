@@ -484,6 +484,31 @@ def main() -> int:
         indented_lines = ["## Unrelated indented code table", "", *indented_table.splitlines(), ""]
         empty_lines[canonical_header_index:canonical_header_index] = indented_lines
         indented_code_decoy = "\n".join(empty_lines) + "\n"
+        trailing_fence_close_decoy = (
+            "```markdown\n"
+            "``` trailing text is not a closing fence\n"
+            "# Evidence ledger\n\n"
+            + "\n".join(ledger_table_lines)
+            + "\n```\n"
+        )
+        last_claim_cells = ledger_cells(ledger_table_lines[-1])
+        last_claim_cells[4] += " Inline-code example: `<!--`"
+        last_claim_row = "| " + " | ".join(
+            cell.replace("|", "\\|") for cell in last_claim_cells
+        ) + " |"
+        inline_comment_decoy = evidence_source.replace(ledger_table_lines[-1], last_claim_row, 1)
+        inline_comment_decoy = insert_ledger_rows_after(
+            inline_comment_decoy,
+            last_claim_cells[0],
+            ["| undeclared-after-inline-code | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |"],
+        ) + "\n-->\n"
+        second_ledger_section_decoy = (
+            evidence_source.rstrip()
+            + "\n\n# Intervening supplemental section\n\nSynthetic section text.\n"
+            + "\n# Evidence ledger\n\n"
+            + "\n".join(ledger_table_lines[:2])
+            + "\n| undeclared-after-second-section | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |\n"
+        )
         second_ledger_table = evidence_source.rstrip() + "\n\n" + "\n".join(ledger_table_lines) + "\n"
         separator_line = next(line for line in evidence_source.splitlines() if line.startswith("|---"))
         short_separator = evidence_source.replace(separator_line, "|---|---|---|---|", 1)
@@ -610,6 +635,24 @@ def main() -> int:
                 deepcopy(manifest_source),
                 commented_ledger_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "fence close marker with trailing text cannot expose a code table",
+                deepcopy(manifest_source),
+                trailing_fence_close_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "inline-code comment marker cannot hide a later undeclared ledger row",
+                deepcopy(manifest_source),
+                inline_comment_decoy,
+                "undeclared-after-inline-code: evidence ledger claim ID is not declared in the manifest",
+            ),
+            (
+                "second canonical ledger section after an intervening heading is rejected",
+                deepcopy(manifest_source),
+                second_ledger_section_decoy,
+                "evidence document contains more than one Evidence ledger section",
             ),
             (
                 "second ledger table after a blank is rejected",
