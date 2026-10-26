@@ -276,6 +276,18 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "list-item raw HTML heading cannot satisfy a required section",
+            "- <div hidden>\n  ## Fixture section\n  </div>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "ordered-list raw HTML heading cannot satisfy a required section",
+            "1. <div hidden>\n   ## Fixture section\n   </div>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "commented README heading cannot satisfy a required section",
             "<!--\n## Fixture section\n-->\n",
             ["Fixture section"],
@@ -312,10 +324,16 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
-            "textarea-block README heading cannot satisfy a required section",
-            "<textarea>\n\n## Fixture section\n</textarea>\n",
+            "textarea type-7 block heading cannot satisfy a required section before blank line",
+            "<textarea>\n## Fixture section\n\n",
             ["Fixture section"],
             "README missing required section: Fixture section",
+        ),
+        (
+            "visible H2 after textarea type-7 blank-line terminator is accepted",
+            "<textarea>\n\n## Fixture section\n</textarea>\n",
+            ["Fixture section"],
+            None,
         ),
         (
             "standalone type-7 picture block heading cannot satisfy a required section",
@@ -331,13 +349,19 @@ def check_readme_section_controls(checker_source: Path) -> bool:
         ),
         (
             "visible H2 after a closed textarea block is accepted",
-            "<textarea>\nexample\n</textarea>\n## Fixture section\n",
+            "<textarea>\nexample\n</textarea>\n\n## Fixture section\n",
             ["Fixture section"],
             None,
         ),
         (
             "visible H2 after a type-7 blank-line terminator is accepted",
             "<picture>\n## Hidden fixture title\n\n## Fixture section\n",
+            ["Fixture section"],
+            None,
+        ),
+        (
+            "visible H2 after list-item type-6 block blank-line terminator is accepted",
+            "- <div hidden>\n  ## Hidden fixture title\n\n## Fixture section\n",
             ["Fixture section"],
             None,
         ),
@@ -744,6 +768,15 @@ def main() -> int:
                 ),
             ]
         )
+        for marker, indent in (("-", "  "), ("1.", "   ")):
+            raw_html_ledger_decoys.append(
+                (
+                    f"ledger inside list-item raw HTML from {marker!r} cannot substitute for visible ledger",
+                    f"{marker} <div hidden>\n{indent}# Evidence ledger\n"
+                    + "\n".join(f"{indent}{line}" for line in raw_html_ledger_table.splitlines())
+                    + f"\n{indent}</div>\n\n",
+                )
+            )
         separator_line = next(line for line in evidence_source.splitlines() if line.startswith("|---"))
         short_separator = evidence_source.replace(separator_line, "|---|---|---|---|", 1)
         malformed_then_unknown = insert_ledger_rows_after(
@@ -1030,7 +1063,21 @@ def main() -> int:
         if not run_case(
             "visible ledger after a closed type-1 HTML block remains accepted",
             deepcopy(manifest_source),
-            "<textarea>\nHidden fixture text\n</textarea>\n\n" + evidence_source,
+            "<pre>\nHidden fixture text\n</pre>\n\n" + evidence_source,
+            None,
+        ):
+            return 1
+        if not run_case(
+            "visible ledger after a textarea type-7 blank-line terminator remains accepted",
+            deepcopy(manifest_source),
+            "<textarea>\n\n" + evidence_source,
+            None,
+        ):
+            return 1
+        if not run_case(
+            "visible ledger after a list-item type-6 blank-line terminator remains accepted",
+            deepcopy(manifest_source),
+            "- <div hidden>\n  # Hidden fixture ledger\n\n" + evidence_source,
             None,
         ):
             return 1

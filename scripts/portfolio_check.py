@@ -21,12 +21,27 @@ RAW_HTML_BLOCK_START = re.compile(
     r"^ {0,3}<(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?=[ \t/>])",
     re.I,
 )
-RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style|textarea)(?=[ \t/>])", re.I)
+RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style)(?=[ \t/>])", re.I)
 # A complete standalone open or closing tag starts a type-7 block, which ends at a blank line.
 RAW_HTML_TYPE7_START = re.compile(
     r"^ {0,3}(?:<[A-Za-z][A-Za-z0-9:-]*(?:[ \t]+[^<>]*?)?|</[A-Za-z][A-Za-z0-9:-]*[ \t]*)(?<!/)>[ \t]*$",
     re.I,
 )
+LIST_ITEM_CONTENT = re.compile(r"^ {0,3}(?:[-+*]|\d{1,9}[.)])[ \t]{1,4}(.+)$")
+
+
+def raw_html_block_start(line: str) -> str | None:
+    """Return a close-tag name for type-1 HTML, empty for blank-ended HTML, or None."""
+    content = line
+    list_item = LIST_ITEM_CONTENT.match(line)
+    if list_item:
+        content = list_item.group(1)
+    type1_match = RAW_HTML_TYPE1_START.match(content)
+    if type1_match:
+        return type1_match.group(1).lower()
+    if RAW_HTML_BLOCK_START.match(content) or RAW_HTML_TYPE7_START.match(content):
+        return ""
+    return None
 
 
 def main() -> int:
@@ -288,18 +303,10 @@ def main() -> int:
             visible, in_readme_comment = strip_html_comments(raw_line, in_readme_comment)
             if comment_was_open:
                 continue
-            type1_match = RAW_HTML_TYPE1_START.match(raw_line)
-            if type1_match:
+            html_close_tag = raw_html_block_start(raw_line)
+            if html_close_tag is not None:
                 in_readme_html_block = True
-                readme_html_close_tag = type1_match.group(1).lower()
-                continue
-            if RAW_HTML_BLOCK_START.match(raw_line):
-                in_readme_html_block = True
-                readme_html_close_tag = None
-                continue
-            if RAW_HTML_TYPE7_START.match(raw_line):
-                in_readme_html_block = True
-                readme_html_close_tag = None
+                readme_html_close_tag = html_close_tag or None
                 continue
             if not re.match(r"^ {0,3}##[ \t]+", raw_line):
                 continue
@@ -370,14 +377,10 @@ def main() -> int:
         if fence is not None:
             continue
         if not in_html_comment:
-            type1_match = RAW_HTML_TYPE1_START.match(raw_line)
-            if type1_match:
+            html_close_tag = raw_html_block_start(raw_line)
+            if html_close_tag is not None:
                 in_evidence_html_block = True
-                evidence_html_close_tag = type1_match.group(1).lower()
-                continue
-            if RAW_HTML_BLOCK_START.match(raw_line) or RAW_HTML_TYPE7_START.match(raw_line):
-                in_evidence_html_block = True
-                evidence_html_close_tag = None
+                evidence_html_close_tag = html_close_tag or None
                 continue
         if re.match(r"^#\s", stripped):
             if re.fullmatch(r"#\s+Evidence ledger\s*#*", stripped):
