@@ -22,6 +22,11 @@ RAW_HTML_BLOCK_START = re.compile(
     re.I,
 )
 RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style)(?=[ \t/>])", re.I)
+# A complete standalone open or closing tag starts a type-7 block, which ends at a blank line.
+RAW_HTML_TYPE7_START = re.compile(
+    r"^ {0,3}(?:<[A-Za-z][A-Za-z0-9:-]*(?:[ \t]+[^<>]*?)?|</[A-Za-z][A-Za-z0-9:-]*[ \t]*)(?<!/)>[ \t]*$",
+    re.I,
+)
 
 
 def main() -> int:
@@ -284,6 +289,10 @@ def main() -> int:
                 readme_html_close_tag = type1_match.group(1).lower()
                 continue
             if RAW_HTML_BLOCK_START.match(raw_line):
+                in_readme_html_block = True
+                readme_html_close_tag = None
+                continue
+            if RAW_HTML_TYPE7_START.match(raw_line):
                 in_readme_html_block = True
                 readme_html_close_tag = None
                 continue

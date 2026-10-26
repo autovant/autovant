@@ -294,8 +294,20 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "standalone type-7 picture block heading cannot satisfy a required section",
+            "<picture>\n## Fixture section\n\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "visible H2 after a closed pre block is accepted",
             "<pre>\nexample\n</pre>\n## Fixture section\n",
+            ["Fixture section"],
+            None,
+        ),
+        (
+            "visible H2 after a type-7 blank-line terminator is accepted",
+            "<picture>\n## Hidden fixture title\n\n## Fixture section\n",
             ["Fixture section"],
             None,
         ),
