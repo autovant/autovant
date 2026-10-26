@@ -1,6 +1,6 @@
 # Redactor
 
-**Hard-offline de-identification: every file is protected or refused, never passed through.**
+**The case study describes Redactor as hard-offline: supported files are transformed and unsupported files are refused. This profile does not independently verify that guarantee.**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/redactor/redactor-review-dark.png">

@@ -12,6 +12,20 @@ I turn document, agent and operational workflows into software with explicit con
 Open to senior, principal and lead roles in applied AI engineering and solutions architecture.
 **[Portfolio and résumé](https://samadshareef.vercel.app)** · **[LinkedIn](https://www.linkedin.com/in/samadshareef)** · **[Public code: Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)**
 
+## What this repository contains
+
+This is the publication layer for selected engineering work: case-study text, architecture diagrams, and screenshots. The product source for these private systems is not included here. There is no runnable product application, local product demo, or application test suite in this repository.
+
+For an interview walkthrough, use [the 5–10 minute demo guide](docs/demo.md). It demonstrates the profile and explains how to discuss a selected case study; it does not execute the described product. The [architecture note](docs/architecture.md) maps this repository, and the [claim ledger](docs/evidence.md) records each prominent claim's status and proof limit.
+
+## Evidence and limits
+
+Case-study dates and test counts are publication records, not fresh runs from this repository. Private product source, run receipts, and source revision identifiers are not bundled here, so claims remain partial unless the ledger identifies stronger evidence. This repo contains no product runtime or app tests.
+
+## AI assistance
+
+AI tools assisted with this readiness documentation and review. The private product source is outside this repository, so this statement does not assign authorship to individual product components or independently validate their claims.
+
 ## Selected systems
 
 The source is private, so each case study shows the product on synthetic data, its architecture, its dated evidence and its limits.
@@ -30,7 +44,7 @@ The source is private, so each case study shows the product on synthetic data, i
 
 ### [Redactor](case-studies/redactor.md)
 
-**Hard-offline de-identification: every file is protected or refused, never passed through.**
+**The case study describes Redactor as hard-offline: supported files are transformed and unsupported files are refused. This profile does not independently verify that guarantee.**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screens/redactor/redactor-review-dark.png">
