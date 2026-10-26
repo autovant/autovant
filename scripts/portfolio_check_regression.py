@@ -276,6 +276,30 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "pre-block README heading cannot satisfy a required section",
+            "<pre>\n\n## Fixture section\n</pre>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "script-block README heading cannot satisfy a required section",
+            "<script>\n\n## Fixture section\n</script>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "style-block README heading cannot satisfy a required section",
+            "<style>\n\n## Fixture section\n</style>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "visible H2 after a closed pre block is accepted",
+            "<pre>\nexample\n</pre>\n## Fixture section\n",
+            ["Fixture section"],
+            None,
+        ),
+        (
             "H3 README heading cannot satisfy a required H2 section",
             "### Fixture section\n",
             ["Fixture section"],

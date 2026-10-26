@@ -16,10 +16,12 @@ PLACEHOLDER = re.compile(
 MACHINE_PATH = re.compile(r"(?i)(?:\b[a-z]:[\\/]|/(?:users|home|root)/|/mnt/c/)")
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HTML = re.compile(r"\b(src|srcset)\s*=\s*['\"]([^'\"]+)['\"]", re.I)
+# CommonMark type-6 block tags end at a blank line; type-1 raw tags end at their close tag.
 RAW_HTML_BLOCK_START = re.compile(
     r"^ {0,3}<(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?=[ \t/>])",
     re.I,
 )
+RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style)(?=[ \t/>])", re.I)
 
 
 def main() -> int:
@@ -247,10 +249,15 @@ def main() -> int:
         visible_headings: set[str] = set()
         in_readme_comment = False
         in_readme_html_block = False
+        readme_html_close_tag: str | None = None
         readme_fence: tuple[str, int] | None = None
         for raw_line in readme_text.splitlines():
             if in_readme_html_block:
-                if not raw_line.strip():
+                if readme_html_close_tag is not None:
+                    if re.search(rf"</{readme_html_close_tag}[ \t]*>", raw_line, re.I):
+                        in_readme_html_block = False
+                        readme_html_close_tag = None
+                elif not raw_line.strip():
                     in_readme_html_block = False
                 continue
             if readme_fence is not None:
@@ -271,8 +278,14 @@ def main() -> int:
             visible, in_readme_comment = strip_html_comments(raw_line, in_readme_comment)
             if comment_was_open:
                 continue
+            type1_match = RAW_HTML_TYPE1_START.match(raw_line)
+            if type1_match:
+                in_readme_html_block = True
+                readme_html_close_tag = type1_match.group(1).lower()
+                continue
             if RAW_HTML_BLOCK_START.match(raw_line):
                 in_readme_html_block = True
+                readme_html_close_tag = None
                 continue
             if not re.match(r"^ {0,3}##[ \t]+", raw_line):
                 continue
