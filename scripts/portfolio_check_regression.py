@@ -270,8 +270,20 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "ordered-list nested fenced README heading cannot satisfy a required section",
+            "1. ~~~markdown\n   ## Fixture section\n   ~~~\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "commented README heading cannot satisfy a required section",
             "<!--\n## Fixture section\n-->\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
+            "same-line HTML comment heading cannot satisfy a required section",
+            "<!-- ## Fixture section -->\n",
             ["Fixture section"],
             "README missing required section: Fixture section",
         ),
@@ -300,6 +312,12 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "textarea-block README heading cannot satisfy a required section",
+            "<textarea>\n\n## Fixture section\n</textarea>\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "standalone type-7 picture block heading cannot satisfy a required section",
             "<picture>\n## Fixture section\n\n",
             ["Fixture section"],
@@ -308,6 +326,12 @@ def check_readme_section_controls(checker_source: Path) -> bool:
         (
             "visible H2 after a closed pre block is accepted",
             "<pre>\nexample\n</pre>\n## Fixture section\n",
+            ["Fixture section"],
+            None,
+        ),
+        (
+            "visible H2 after a closed textarea block is accepted",
+            "<textarea>\nexample\n</textarea>\n## Fixture section\n",
             ["Fixture section"],
             None,
         ),
@@ -696,6 +720,30 @@ def main() -> int:
             + "\n| undeclared-after-second-section | Synthetic undeclared claim. | partially_verified | README.md | Regression fixture only. |\n"
         )
         second_ledger_table = evidence_source.rstrip() + "\n\n" + "\n".join(ledger_table_lines) + "\n"
+        raw_html_ledger_table = "\n".join(ledger_table_lines)
+        raw_html_ledger_decoys = [
+            (
+                f"ledger inside raw <{tag}> block cannot substitute for visible ledger",
+                f"<{tag}>\n# Evidence ledger\n{raw_html_ledger_table}\n</{tag}>\n",
+            )
+            for tag in ("pre", "script", "style", "textarea")
+        ]
+        raw_html_ledger_decoys.extend(
+            [
+                (
+                    "ledger inside type-6 div block cannot substitute for visible ledger",
+                    "<div hidden>\n# Evidence ledger\n"
+                    + raw_html_ledger_table
+                    + "\n</div>\n\n",
+                ),
+                (
+                    "ledger inside type-7 picture block cannot substitute for visible ledger",
+                    "<picture>\n# Evidence ledger\n"
+                    + raw_html_ledger_table
+                    + "\n</picture>\n\n",
+                ),
+            ]
+        )
         separator_line = next(line for line in evidence_source.splitlines() if line.startswith("|---"))
         short_separator = evidence_source.replace(separator_line, "|---|---|---|---|", 1)
         malformed_then_unknown = insert_ledger_rows_after(
@@ -939,6 +987,15 @@ def main() -> int:
                 missing_path_forbidden,
             ),
         ]
+        cases.extend(
+            (
+                label,
+                deepcopy(manifest_source),
+                hidden_ledger,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            )
+            for label, hidden_ledger in raw_html_ledger_decoys
+        )
         cases[1][1]["claims"][career_index]["text"] += " (changed)"
         cases[2][1]["claims"][career_index]["evidence"][0]["ref"] = "LICENSE.md"
         cases_passed = True
@@ -960,6 +1017,20 @@ def main() -> int:
             "indented code comment marker does not hide the canonical ledger",
             deepcopy(manifest_source),
             "    <!-- example source comment\n\n" + evidence_source,
+            None,
+        ):
+            return 1
+        if not run_case(
+            "visible ledger after a type-6 HTML block remains accepted",
+            deepcopy(manifest_source),
+            "<div hidden>\n# Hidden fixture ledger\n\n</div>\n\n" + evidence_source,
+            None,
+        ):
+            return 1
+        if not run_case(
+            "visible ledger after a closed type-1 HTML block remains accepted",
+            deepcopy(manifest_source),
+            "<textarea>\nHidden fixture text\n</textarea>\n\n" + evidence_source,
             None,
         ):
             return 1

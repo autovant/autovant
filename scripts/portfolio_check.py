@@ -16,12 +16,12 @@ PLACEHOLDER = re.compile(
 MACHINE_PATH = re.compile(r"(?i)(?:\b[a-z]:[\\/]|/(?:users|home|root)/|/mnt/c/)")
 LINK = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HTML = re.compile(r"\b(src|srcset)\s*=\s*['\"]([^'\"]+)['\"]", re.I)
-# CommonMark type-6 block tags end at a blank line; type-1 raw tags end at their close tag.
+# CommonMark type-6/7 blocks end at a blank line; type-1 raw tags end at their close tag.
 RAW_HTML_BLOCK_START = re.compile(
     r"^ {0,3}<(?:address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul)(?=[ \t/>])",
     re.I,
 )
-RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style)(?=[ \t/>])", re.I)
+RAW_HTML_TYPE1_START = re.compile(r"^ {0,3}<(pre|script|style|textarea)(?=[ \t/>])", re.I)
 # A complete standalone open or closing tag starts a type-7 block, which ends at a blank line.
 RAW_HTML_TYPE7_START = re.compile(
     r"^ {0,3}(?:<[A-Za-z][A-Za-z0-9:-]*(?:[ \t]+[^<>]*?)?|</[A-Za-z][A-Za-z0-9:-]*[ \t]*)(?<!/)>[ \t]*$",
@@ -315,11 +315,21 @@ def main() -> int:
     in_html_comment = False
     in_ledger_section = False
     saw_ledger_section = False
+    in_evidence_html_block = False
+    evidence_html_close_tag: str | None = None
     header_found = False
     table_started = False
     table_ended = False
     ledger_width = len(ledger_header)
     for raw_line in evidence_doc.splitlines():
+        if in_evidence_html_block:
+            if evidence_html_close_tag is not None:
+                if re.search(rf"</{evidence_html_close_tag}[ \t]*>", raw_line, re.I):
+                    in_evidence_html_block = False
+                    evidence_html_close_tag = None
+            elif not raw_line.strip():
+                in_evidence_html_block = False
+            continue
         if (
             fence is None
             and not in_html_comment
@@ -359,6 +369,16 @@ def main() -> int:
             continue
         if fence is not None:
             continue
+        if not in_html_comment:
+            type1_match = RAW_HTML_TYPE1_START.match(raw_line)
+            if type1_match:
+                in_evidence_html_block = True
+                evidence_html_close_tag = type1_match.group(1).lower()
+                continue
+            if RAW_HTML_BLOCK_START.match(raw_line) or RAW_HTML_TYPE7_START.match(raw_line):
+                in_evidence_html_block = True
+                evidence_html_close_tag = None
+                continue
         if re.match(r"^#\s", stripped):
             if re.fullmatch(r"#\s+Evidence ledger\s*#*", stripped):
                 if saw_ledger_section:
