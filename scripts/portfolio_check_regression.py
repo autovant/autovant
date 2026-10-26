@@ -264,6 +264,12 @@ def check_readme_section_controls(checker_source: Path) -> bool:
             "README missing required section: Fixture section",
         ),
         (
+            "list-item fenced README heading cannot satisfy a required section",
+            "- ```markdown\n  ## Fixture section\n  ```\n",
+            ["Fixture section"],
+            "README missing required section: Fixture section",
+        ),
+        (
             "commented README heading cannot satisfy a required section",
             "<!--\n## Fixture section\n-->\n",
             ["Fixture section"],
@@ -647,6 +653,11 @@ def main() -> int:
             + "\n".join(ledger_table_lines)
             + "\n-->\n"
         )
+        same_line_commented_ledger_decoy = (
+            "<!-- hidden --># Evidence ledger\n\n"
+            + "\n".join(ledger_table_lines)
+            + "\n"
+        )
         unmatched_backtick_comment_decoy = "`\n" + commented_ledger_decoy
         escaped_backtick_comment_decoy = (
             "\\`<!-- `\n# Evidence ledger\n\n"
@@ -827,6 +838,12 @@ def main() -> int:
                 "commented heading and table cannot substitute for the ledger",
                 deepcopy(manifest_source),
                 commented_ledger_decoy,
+                f"{claim_id}: evidence ledger must contain exactly one claim row",
+            ),
+            (
+                "same-line comment cannot supply the canonical ledger heading",
+                deepcopy(manifest_source),
+                same_line_commented_ledger_decoy,
                 f"{claim_id}: evidence ledger must contain exactly one claim row",
             ),
             (

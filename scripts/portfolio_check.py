@@ -276,6 +276,11 @@ def main() -> int:
                 continue
             if not in_readme_comment:
                 fence_match = re.match(r"^ {0,3}(`{3,}|~{3,})", raw_line)
+                if fence_match is None:
+                    fence_match = re.match(
+                        r"^ {0,3}(?:[-+*]|\d{1,9}[.)])[ \t]{1,4}(`{3,}|~{3,})",
+                        raw_line,
+                    )
                 if fence_match:
                     readme_fence = (fence_match.group(1)[0], len(fence_match.group(1)))
                     continue
@@ -321,6 +326,8 @@ def main() -> int:
             and (raw_line.startswith("    ") or raw_line.startswith("\t"))
         ):
             continue
+        comment_was_open = in_html_comment
+        starts_html_comment_block = re.match(r"^ {0,3}<!--", raw_line) is not None
         raw_fence_match = re.match(r"^(`{3,}|~{3,})", raw_line.strip())
         if fence is None and raw_fence_match and not in_html_comment:
             line = raw_line
@@ -328,6 +335,8 @@ def main() -> int:
             line, in_html_comment = strip_html_comments(raw_line, in_html_comment)
         else:
             line = raw_line
+        if fence is None and (comment_was_open or starts_html_comment_block):
+            continue
         if line.startswith("    ") or line.startswith("\t"):
             continue
         stripped = line.strip()
