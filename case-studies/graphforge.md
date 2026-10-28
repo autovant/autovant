@@ -8,7 +8,7 @@
 
 | Stack | Evidence | Checked |
 |---|---|---|
-| Python · LangGraph · FastAPI · React · React Flow · SQLite | 18-case live evaluation · 428 backend and 38 browser tests | 2026-10-16 |
+| Python · LangGraph · FastAPI · React · React Flow · SQLite | Historical 18-case evaluation; source and retained test records | 2026-10-28 source audit; no fresh product run |
 
 ## The problem
 
@@ -39,10 +39,11 @@ The typed graph IR is the system boundary. The canvas edits it, and the validato
 
 ## Evidence
 
-- **Live evaluation (2026-08-10):** 17 of 18 cases executed to completion (94.4%). The one failure, a human-interrupt change-approval case missing a required input, stays in the published results.
-- **Tests (2026-10-16):** 428 backend tests and 38 Playwright browser tests passed. The browser suite builds the incident-triage graph in the UI and runs it with a real HTTP call, a human interrupt, three runs and code export.
-- **Export:** a code-generation test runs the exported Python as a standalone file in a subprocess.
-- **Scope:** 11 node types and 13 starter patterns.
+- **Historical evaluation (2026-08-10):** `GraphForge@e21be86a09be34392a3fe037f7c7499488441591:server/evals/RESULTS.md` records a subscription-CLI authoring evaluation over 18 synthetic cases. All passed the harness's structural graph checks; 17 executed to completion (94.4%). The `hitl-change-approval` failure, missing required input `note`, remains recorded.
+- **Scoring boundary:** that revision's `server/evals/run.py` scores correctness from expected node types, edges, cycles, human-review gates, router branches and state fields. These structural checks do not establish semantic task correctness or security containment.
+- **Retained tests:** the same revision's `TESTS.md` records later candidate-specific backend and browser checks. They are historical records, not a new run of the inspected default branch; no suite total is used as a current qualification headline.
+- **Export:** `server/src/graphforge/codegen.py` and `server/tests/test_codegen.py` implement export and define a subprocess test of standalone Python. This audit did not execute an export.
+- **Static inventory:** `server/src/graphforge/nodes/__init__.py` and `server/src/graphforge/recipes.py` at that revision define 11 node types and 13 starter patterns. These are source counts, not runtime qualification.
 
 ## Scope and limits
 
@@ -50,5 +51,6 @@ The typed graph IR is the system boundary. The canvas edits it, and the validato
 - Local tool and MCP evidence isn't proof of a production sandbox or a multi-tenant deployment.
 - Runs through a subscription CLI don't report comparable per-call API cost, so cost is reported as unavailable rather than estimated.
 - Exported code still needs normal review, dependency management and deployment controls.
+- Replay re-executes the saved graph; it does not undo external side effects. Human-edited values are not type-checked against state.
 
 [← Back to profile](../README.md)
