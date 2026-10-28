@@ -6,14 +6,14 @@ Three related private tools, shown here with synthetic data only. They aren't on
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/enterprise/openvantage-review-station-dark.png">
-  <img alt="OpenVantage review station: a synthetic scanned invoice marked SYNTHETIC SAMPLE with extracted fields boxed on the page, three cross-field validation issues such as line items and tax not reconciling with the total due, per-field image snippets, and Reject, Skip, Save and Accept actions." src="../assets/screens/enterprise/openvantage-review-station-light.png" width="100%">
+  <img alt="Historical OpenVantage review capture: a synthetic invoice marked SYNTHETIC SAMPLE with extracted fields boxed on the page, validation issues, per-field image snippets and review actions. The pictured acceptance wording is not current behavior." src="../assets/screens/enterprise/openvantage-review-station-light.png" width="100%">
 </picture>
 
-<sub>OpenVantage routes a synthetic invoice to review: three cross-field validation issues, each field boxed on the page, and an accept or reject decision for a person.</sub>
+<sub>Historical synthetic OpenVantage review capture. Current acceptance refuses while validation issues remain; corrections must be saved and rechecked. The pictured acceptance wording is stale.</sub>
 
 | Stack | Evidence | Checked |
 |---|---|---|
-| Python · FastAPI · React · TypeScript · Blue Prism XML · OCR | 31 review rules · 163 and 406 passing tests | 2026-10-16 |
+| Python · FastAPI · React · TypeScript · Blue Prism XML · OCR | Separate local tool evidence; no combined customer acceptance | 2026-10-28 copy audit |
 
 ## The problem
 
@@ -23,28 +23,28 @@ Enterprise automation teams do more than build bots. They interpret requirements
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/enterprise-automation-dark.svg">
-  <img alt="Two pipelines. Requirements or automation XML go through an engine client that validates, generates and packages artifacts, then through review, build and tests to a validated, importable release. Scanned documents go through CPU-first OCR and layout, then schema-bound classification and extraction, then a per-document confidence gate. Confident documents become a structured JSON result. Low-confidence documents go to a human review station first." src="../assets/diagrams/enterprise-automation-light.svg" width="100%">
+  <img alt="Overview of separate artifact and document pipelines. The artifact path combines local XML generation with engine validation and release assembly; this overview does not qualify an importable release. The document path uses OCR, classification, extraction and confidence-based routing to human review." src="../assets/diagrams/enterprise-automation-light.svg" width="100%">
 </picture>
 
 ## The tools
 
 | Tool | What it does |
 |---|---|
-| **Blue Prism Workbench** | Deterministic review of Blue Prism processes and objects, artifact generation, release building, plain-language explanation and test-case export. Validation, single-page generation, layout scoring and release packaging go through one engine client; the review rules and multi-page generation still have their own XML paths. |
+| **Blue Prism Workbench** | Deterministic review of Blue Prism processes and objects, artifact generation, release building, plain-language explanation and test-case export. Local GeneratorRegistry adapters emit `.bpobject` and `.bpprocess` component XML; the separate engine handles validation/build operations and `bp_engine_client.package` assembles `.bprelease` files. Rule review remains separate. |
 | **Scribe** | A no-admin OCR utility. One OCR engine sits behind both a headless JSON CLI and a desktop app, with deterministic page processing and a stable output contract. |
 | **OpenVantage** | A CPU-first document pipeline: OCR, classification, schema-bound extraction and tables, with optional OCR-confidence calibration and a revision-aware human review station. Each stage can swap in a heavier model without reshaping the pipeline. |
 
 ## Key decisions
 
-- **Move platform knowledge behind one engine.** Validation, single-page generation, layout scoring and release packaging go through one engine client, so they agree on what a file means. The rule-based review and multi-page generation still have their own XML paths.
+- **Make component and engine boundaries explicit.** Local GeneratorRegistry adapters produce component XML. The separate engine validates and builds artifacts, and its package operation assembles releases. Rule-based review has a separate path; this is not a claim that one engine owns every interpretation of XML.
 - **Uncertainty routes to a person.** Documents with low confidence, failed validators or inconsistent fields go to a review station instead of being accepted silently. OCR confidence can be calibrated; extraction confidence is left uncalibrated by design.
-- **Work on locked-down machines.** Scribe installs without admin rights and bundles pinned, hash-checked Tesseract and Poppler builds instead of relying on whatever is installed. OpenVantage keeps heavy model weights optional.
+- **Work on locked-down machines.** Scribe has a no-admin packaging path with pinned, hash-checked Tesseract and Poppler dependencies; this is not a current qualified native bundle. OpenVantage keeps heavy model weights optional.
 
 ## Evidence
 
-- **Blue Prism Workbench:** 31 review rules. The synthetic process returns the same 9 findings on every run (4 runs captured), and 163 backend unit tests passed on 2026-10-16.
-- **OpenVantage:** 406 tests passed (1 skipped) on 2026-10-16.
-- **Scribe:** the CLI returned its JSON contract on a synthetic two-page scan (95.1 mean word confidence). The full suite had 232 passing, 5 skipped and 1 failing test, a degraded-scan end-to-end case that is still open.
+- **Blue Prism Workbench:** `blueprism-workbench@e9007863891c0bbb02754cefdfbc3c38a3608353:docs/evidence.md` documents 31 review rules across eight categories and the component-generation/engine boundary (BPW-02). The screenshot is a static synthetic capture, not proof of repeatable runs; the older aggregate pass count is omitted because raw output is absent.
+- **OpenVantage:** `openvantage@4539cfa6c7940c38ae1515aaa8b49fd4cc29df74:docs/evidence.md` and `TESTS.md` retain local test records. Acceptance stays blocked while validation issues remain: save corrections and recheck. The older capture does not establish the current issue count or acceptance UI. No current accuracy or customer-acceptance result is inferred.
+- **Scribe:** `Scribe@fef08e082a6c9982a6eb425916f3a7ff450d5f47:docs/evidence.md` (SCR-03) records 335 passes, no skips and no failures on 2026-10-25 at source `2a552c3791f062a112a26d57d45bdead03720240`. The prior degraded-scan failure report is historical and is not asserted to remain open. This result does not qualify native packaging.
 
 <img alt="Blue Prism Workbench analysis results for a synthetic process named Demo - Invoice Intake: 9 findings split into 3 errors, 4 warnings and 2 info, each with a severity, rule ID, category and message." src="../assets/screens/enterprise/bpw-review-results-light.png" width="100%">
 

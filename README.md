@@ -7,7 +7,7 @@
 
 I turn document, agent and operational workflows into software with explicit controls, review paths and measurable verification. Models interpret and propose. Deterministic code and accountable people own the consequential decisions.
 
-**Career impact since 2018:** **$1.5M+** saved · **20,000+** hours saved · **300+** end-to-end automation solutions · **8 years** in enterprise automation
+**Owner-reported career impact since 2018:** **$1.5M+** saved · **20,000+** hours saved · **300+** end-to-end automation solutions · **8 years** in enterprise automation. These totals are not independently reproduced in this repository.
 
 Open to senior, principal and lead roles in applied AI engineering and solutions architecture.
 **[Portfolio and résumé](https://samadshareef.vercel.app)** · **[LinkedIn](https://www.linkedin.com/in/samadshareef)** · **[Public code: Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)**
@@ -20,7 +20,7 @@ For an interview walkthrough, use [the 5–10 minute demo guide](docs/demo.md). 
 
 ## Evidence and limits
 
-Case-study dates and test counts are publication records, not fresh runs from this repository. Private product source, run receipts, and source revision identifiers are not bundled here, so claims remain partial unless the ledger identifies stronger evidence. This repo contains no product runtime or app tests.
+Case-study results are scoped to the source revisions and receipts named in the [claim ledger](docs/evidence.md); they are not fresh product runs from this repository. Private product source and run receipts are not bundled here, so claims remain partial. Screenshots show individual synthetic states. They do not establish live-provider, customer or production acceptance.
 
 ## AI assistance
 
@@ -29,6 +29,20 @@ AI tools assisted with this readiness documentation and review. The private prod
 ## Selected systems
 
 The source is private, so each case study shows the product on synthetic data, its architecture, its dated evidence and its limits.
+
+## Walkthrough showcase
+
+The following clip reservations are for local app captures using synthetic data. Captures and publication are pending owner review; no video is approved or linked here yet.
+
+| Clip reservation (source repo) | Planned walkthrough |
+|---|---|
+| Mandate Guard (`MandateGuard`) | Bundled offline document-review example; local-model qualification is closed, NOT CONVERGED. |
+| GraphForge (`GraphForge`) | Synthetic workflow authoring, human review and export. |
+| Job Hunter (`job-hunter`) | Synthetic job-search and application-review workflow. |
+| Conductor (`conductor`) | Synthetic case intake, evidence and governed action. |
+| Redactor (`redactor`) | Synthetic file protection and refusal paths. |
+| Relay Desktop (`relay-desktop`) | Local speech and privacy controls, with the capture's backend scope disclosed. |
+| Enterprise tools (`blueprism-workbench`, `Scribe`, `openvantage`) | Separate synthetic artifact-review, OCR and document-review examples. |
 
 ### [GraphForge](case-studies/graphforge.md)
 
@@ -44,7 +58,7 @@ The source is private, so each case study shows the product on synthetic data, i
 
 ### [Redactor](case-studies/redactor.md)
 
-**The case study describes Redactor as hard-offline: supported files are transformed and unsupported files are refused. This profile does not independently verify that guarantee.**
+**Redactor's CLI and desktop sidecar install a network-rejecting process audit hook; the importable API leaves its host process unrestricted. This profile does not independently qualify current offline behavior.**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/screens/redactor/redactor-review-dark.png">
@@ -74,4 +88,4 @@ The source is private, so each case study shows the product on synthetic data, i
 
 ## Public code
 
-**[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)** brings structured brainstorming, planning, test-driven development, debugging, verification and code-review workflows to GitHub Copilot. It ships the 14 upstream skills, four Copilot prompt files, and PowerShell and Bash installers, with a 9-check repository test suite. It's an MIT-licensed adaptation of Jesse Vincent's [obra/superpowers](https://github.com/obra/superpowers), with the upstream credit kept in the repository.
+**[Superpowers for GitHub Copilot](https://github.com/autovant/superpowers)** brings structured brainstorming, planning, test-driven development, debugging, verification and code-review workflows to GitHub Copilot, with prompt files and PowerShell and Bash installers. It's an MIT-licensed adaptation of Jesse Vincent's [obra/superpowers](https://github.com/obra/superpowers), with the upstream credit kept in the repository.

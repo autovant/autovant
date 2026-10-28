@@ -11,7 +11,7 @@
 
 | Stack | Evidence | Checked |
 |---|---|---|
-| Python · FastAPI · LangGraph · PostgreSQL · React | 2,764 Python and 231 UI tests · 19 ADRs | 2026-10-16 |
+| Python · FastAPI · LangGraph · PostgreSQL · React | Historical local and simulated validation; current product qualification not claimed | 2026-10-28 copy audit |
 
 ## The problem
 
@@ -42,8 +42,7 @@ Conductor ships one artifact with separately startable process roles: API, intak
 
 ## Evidence
 
-- **Tests (2026-10-16):** 2,764 Python tests passed (80 skipped) and 231 platform-UI tests passed. Architecture, documentation and manifest checks passed. The operator console's own suite had 599 passing and 2 failing tests, from a duplicate-React test setup that is still open.
-- **Breadth:** 263 Python test files, 34 Playwright specs and 19 architecture decision records.
+- **Historical validation (2026-10-16):** `conductor@c1b5e82bab0bfaa149d05d4f7caf911b051f4b2b:README.md` retains a report of 2,764 Python passes and 80 skips. The prior case study also reported UI passes alongside two operator-console failures attributed to duplicate React in the test setup. That dated report does not establish whether those failures remain open today. `docs/portfolio/evidence.md` limits the portfolio evidence to source and documentation; fresh product execution is not claimed here.
 - **Release gates:** Level 1 Showcase, Level 2 Release Candidate and Level 3 Enterprise Connected. Only local and simulated evidence is claimed here.
 
 ## Scope and limits
