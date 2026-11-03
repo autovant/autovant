@@ -47,7 +47,7 @@
         {
           "ref": "assets/diagrams/build.py",
           "class": "source",
-          "scope": "The only tracked Python program generates SVG diagrams for the publication."
+          "scope": "The diagram generator (assets/diagrams/build.py) produces the SVG diagrams; scripts/portfolio_check.py and scripts/portfolio_check_regression.py validate the publication."
         }
       ],
       "proof_limit": "This describes the tracked profile repository at the source base; it makes no claim about the separate private product repositories."

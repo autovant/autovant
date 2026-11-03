@@ -19,7 +19,7 @@ The case studies describe different systems, not one integrated product. Their d
 - Conductor: an advisory assistant is separate from a deterministic action worker and human review.
 - GraphForge: assistant-drafted typed blueprints compile into a typed graph representation; the described runtime supports checkpoints and human interrupts.
 - Mandate Guard: a parser proposes a structured restriction; deterministic code evaluates holdings and a reviewer sees source-linked evidence.
-- Redactor: an assurance step is described as transforming supported files or refusing unsupported ones; the profile asserts hard-offline behavior.
+- Redactor: an assurance step is described as transforming supported files or refusing unsupported ones; the profile describes a network-rejecting guard in the CLI and desktop sidecar only, and does not independently qualify offline behavior.
 - Relay: local speech recognition is described separately from optional provider-backed cleanup, with an offline policy gate.
 - Enterprise automation: related tools handle artifact review, release generation, OCR, and uncertainty routing; the case study says they are not one deployed customer platform.
 

@@ -78,7 +78,7 @@ SPECS = {
         edges=[("files", "cls"), ("cls", "refuse", "unsupported"), ("cls", "engine", "supported"),
                ("engine", "safe"), ("engine", "rt"), ("safe", "evid"), ("rt", "map"), ("map", "restore")],
         boxes=[(["cls", "refuse", "engine", "safe", "rt", "evid", "map", "restore"],
-                "Hard-offline: no network, telemetry or cloud OCR")]),
+                "Network guard: CLI and sidecar only")]),
     "relay": dict(
         title="Relay Desktop: local transcription first, cloud cleanup only when allowed",
         nodes=[("cap", 0, 0, "io", "Local capture", "microphone or audio file"),
@@ -93,9 +93,9 @@ SPECS = {
     "enterprise-automation": dict(
         title="Enterprise automation tools: explicit contracts around uncertain work",
         nodes=[("art", 0, 0, "io", "Requirements", "or automation XML"),
-               ("engine", 1, 0, "det", "Engine client", "validate · generate · package"),
+               ("engine", 1, 0, "det", "Engine client", "generate · validate"),
                ("build", 2, 0, "det", "Review, build, tests", "31 platform rules"),
-               ("rel", 3, 0, "io", "Validated release", "importable package"),
+               ("rel", 3, 0, "io", "Release assembly", "not qualified here"),
                ("docs", 0, 1, "io", "Scanned documents", "PDF, images"),
                ("ocr", 1, 1, "det", "OCR + layout", "CPU-first, no admin"),
                ("ext", 2, 1, "model", "Classify + extract", "schema-bound"),
