@@ -78,7 +78,7 @@ SPECS = {
         edges=[("files", "cls"), ("cls", "refuse", "unsupported"), ("cls", "engine", "supported"),
                ("engine", "safe"), ("engine", "rt"), ("safe", "evid"), ("rt", "map"), ("map", "restore")],
         boxes=[(["cls", "refuse", "engine", "safe", "rt", "evid", "map", "restore"],
-                "Hard-offline: no network, telemetry or cloud OCR")]),
+                "Network guard: CLI and sidecar only")]),
     "relay": dict(
         title="Relay Desktop: local transcription first, cloud cleanup only when allowed",
         nodes=[("cap", 0, 0, "io", "Local capture", "microphone or audio file"),
@@ -93,9 +93,9 @@ SPECS = {
     "enterprise-automation": dict(
         title="Enterprise automation tools: explicit contracts around uncertain work",
         nodes=[("art", 0, 0, "io", "Requirements", "or automation XML"),
-               ("engine", 1, 0, "det", "Engine client", "validate · generate · package"),
+               ("engine", 1, 0, "det", "Engine client", "generate · validate"),
                ("build", 2, 0, "det", "Review, build, tests", "31 platform rules"),
-               ("rel", 3, 0, "io", "Validated release", "importable package"),
+               ("rel", 3, 0, "io", "Release assembly", "not qualified here"),
                ("docs", 0, 1, "io", "Scanned documents", "PDF, images"),
                ("ocr", 1, 1, "det", "OCR + layout", "CPU-first, no admin"),
                ("ext", 2, 1, "model", "Classify + extract", "schema-bound"),
@@ -193,14 +193,14 @@ def hero(name, t):
     k, w, h = t["kinds"], 1280, 300
     mono = "ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace"
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" '
-         'aria-labelledby="t"><title id="t">Samad Shareef: Applied AI Engineer, AI and Automation Architect. '
+         'aria-labelledby="t"><title id="t">Samad Shareef: AI Solutions Architect. '
          'Models interpret, policy decides, humans approve, actions are audited.</title>',
          f'<defs><pattern id="g" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" '
          f'fill="none" stroke="{t["box"]}" stroke-opacity=".35"/></pattern></defs>',
          f'<rect width="{w}" height="{h}" rx="18" fill="{t["panel"]}"/>',
          f'<rect x="700" y="0" width="580" height="{h}" fill="url(#g)"/>',
          f'<text x="64" y="86" font-family="{mono}" font-size="17" letter-spacing="2.5" fill="{k["det"]}">'
-         'APPLIED AI · AUTOMATION ARCHITECTURE</text>',
+         'AI SOLUTIONS ARCHITECT</text>',
          f'<text x="60" y="160" font-family="{FONT}" font-size="66" font-weight="700" fill="{t["ink"]}">Samad Shareef</text>',
          f'<text x="64" y="212" font-family="{FONT}" font-size="27" fill="{t["sub"]}">Governed agents, local-first AI,</text>',
          f'<text x="64" y="246" font-family="{FONT}" font-size="27" fill="{t["sub"]}">and enterprise automation.</text>']

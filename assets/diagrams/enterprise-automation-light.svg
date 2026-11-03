@@ -28,15 +28,15 @@
 <rect x="260" y="72" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#0D9488" stroke-opacity=".55"/>
 <rect x="260" y="84" width="3" height="42" rx="1.5" fill="#0D9488"/>
 <text x="274" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Engine client</text>
-<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">validate · generate · package</text>
+<text x="274" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">generate · validate</text>
 <rect x="488" y="72" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#0D9488" stroke-opacity=".55"/>
 <rect x="488" y="84" width="3" height="42" rx="1.5" fill="#0D9488"/>
 <text x="502" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Review, build, tests</text>
 <text x="502" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">31 platform rules</text>
 <rect x="716" y="72" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#334155" stroke-opacity=".55"/>
 <rect x="716" y="84" width="3" height="42" rx="1.5" fill="#334155"/>
-<text x="730" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Validated release</text>
-<text x="730" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">importable package</text>
+<text x="730" y="99" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Release assembly</text>
+<text x="730" y="119" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="12" fill="#66738A">not qualified here</text>
 <rect x="32" y="178" width="168" height="66" rx="10" fill="#FFFFFF" stroke="#334155" stroke-opacity=".55"/>
 <rect x="32" y="190" width="3" height="42" rx="1.5" fill="#334155"/>
 <text x="46" y="205" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="14" font-weight="600" fill="#0B1220">Scanned documents</text>

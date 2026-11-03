@@ -1,6 +1,6 @@
 # Redactor
 
-**The case study describes Redactor as hard-offline: supported files are transformed and unsupported files are refused. This profile does not independently verify that guarantee.**
+**Redactor's CLI and desktop sidecar install a network-rejecting process audit hook; the importable API leaves its host process unrestricted. This profile does not independently qualify current offline behavior.**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/screens/redactor/redactor-review-dark.png">
@@ -11,7 +11,7 @@
 
 | Stack | Evidence | Checked |
 |---|---|---|
-| Python · Rust · Tauri · React · portable Windows packaging | 417 Python tests · packaged app run end to end | 2026-10-16 |
+| Python · Rust · Tauri · React · portable Windows packaging | Retained local record: 418 Python passes, 12 skips | 2026-10-17 run; 2026-10-28 copy audit |
 
 ## The problem
 
@@ -21,7 +21,7 @@ Teams want realistic documents for AI, analytics, testing and review without exp
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="../assets/diagrams/redactor-dark.svg">
-  <img alt="Redactor architecture, entirely hard-offline: files or folders pass an assurance check that either refuses them with a reason or sends them to the Python engine for detection and transformation. Safe mode writes irreversible output to an evidence ledger that verifies before publishing. Roundtrip mode writes protected output plus a separate encrypted map that stays on the machine, and an explicit restore step rejects unknown tokens." src="../assets/diagrams/redactor-light.svg" width="100%">
+  <img alt="Redactor architecture: files or folders pass an assurance check that either refuses them with a reason or sends them to the Python engine for detection and transformation. Safe mode writes irreversible output to an evidence ledger that verifies before publishing. Roundtrip mode writes protected output plus a separate encrypted map, and an explicit restore step rejects unknown tokens. The diagram does not qualify network behavior." src="../assets/diagrams/redactor-light.svg" width="100%">
 </picture>
 
 One authoritative Python engine owns detection, transformation, refusal and evidence semantics. The Tauri/Rust desktop shell and other integrations consume versioned contracts instead of reimplementing the privacy rules.
@@ -42,15 +42,15 @@ One authoritative Python engine owns detection, transformation, refusal and evid
 
 ## Evidence
 
-- **Tests (2026-10-16):** 417 Python tests passed (12 skipped), Ruff was clean, and release verification passed on the source tree.
-- **Packaged app:** the portable build was made from source and driven end to end on synthetic files: Safe protect, Roundtrip protect, and restore of an LLM answer (18 mapping entries authenticated, 3 tokens restored, 0 unresolved).
-- **Refusals:** the CLI refuses a legacy `.xls` and a macro-enabled `.docm`, each with a stated reason.
+- **Retained local result:** `redactor@17294e59b5c2f07944dbfb8cb49cf46f3422a405:docs/evidence.md` (RDR-04) and `docs/evidence/verification.md` record 418 Python passes and 12 skips on 2026-10-17 at source `41e48f7`. This is a retained result, not a new run of the current default branch.
+- **Historical package walkthrough:** the prior case study described Safe protect, Roundtrip protect, restore and refusal paths on synthetic files. The package execution receipt is not bundled here; this profile does not qualify a current portable build or the separate 0.2 candidate.
+- **Offline boundary:** the same revision's `docs/evidence.md` (RDR-03) and `SECURITY.md` describe the network-rejecting process audit hook installed before CLI or desktop-sidecar dispatch. The importable API leaves its host process unrestricted; the guard does not cover embedding applications or external model conversations. Historical offline observations were not rerun here.
 
 ## Scope and limits
 
 - Detection isn't infallible. OCR evidence so far is English-focused, and handwriting or low-quality scans can still be missed.
 - Safe projection can reduce visual fidelity for some formats.
-- In the desktop app, a `.docm` shows as ready at the check step and is refused only at protect, and a refused file added on its own fails the whole check with a generic message rather than a per-file reason.
+- The historical desktop capture showed a `.docm` as ready before protect refused it, and a generic check failure for a lone refused file. Those captured states are not evidence that the current app retains either behavior.
 - Redactor is a privacy engineering tool, not a legal determination or a compliance certification.
 
 [← Back to profile](../README.md)
