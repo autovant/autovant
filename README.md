@@ -1,9 +1,9 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/hero-dark.svg">
-  <img alt="Samad Shareef: Applied AI Engineer, AI and Automation Architect. Models interpret, policy decides, humans approve, actions are audited." src="assets/hero-light.svg" width="100%">
+  <img alt="Samad Shareef: AI Solutions Architect. Models interpret, policy decides, humans approve, actions are audited." src="assets/hero-light.svg" width="100%">
 </picture>
 
-### Applied AI Engineer · AI & Automation Architect
+### AI Solutions Architect
 
 I turn document, agent and operational workflows into software with explicit controls, review paths and measurable verification. Models interpret and propose. Deterministic code and accountable people own the consequential decisions.
 
